@@ -4,7 +4,7 @@ type IronOre struct {
 	Deps []Resource
 }
 
-func (io *IronOre) GetDeps() []Resource {
+func (io *IronOre) GetResources() []Resource {
 	return []Resource{}
 }
 

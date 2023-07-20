@@ -1,6 +1,8 @@
 package resources
 
+import "factory-calc/recipes"
+
 type Resource interface {
-	GetDeps() []Resource
 	GetName() string
+	GetReceipt() recipes.Receipt
 }

@@ -17,7 +17,7 @@ func main() {
 	}
 	println("вы заказали " + strconv.Itoa(*count) + " " + *item)
 	ii := resources.NewIronIngot()
-	deps := ii.GetDeps()
+	deps := ii.GetResources()
 	for _, d := range deps {
 		println("ii состоит из " + d.GetName())
 	}
