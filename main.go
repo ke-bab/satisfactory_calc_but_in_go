@@ -8,11 +8,11 @@ import (
 )
 
 func main() {
-	item := flag.String("i", "", "i=modular-engine")
-	count := flag.Int("c", 1, "c=10")
+	item := flag.String("rname", "", "resource name you want to calc, like: -rname=modular-engine")
+	count := flag.Int("cnt", 1, "count of resources you want, like: -cnt=10")
 	flag.Parse()
 	if *item == "" {
-		println("не указан желаемый предмет")
+		println("resource is not specified")
 		os.Exit(1)
 	}
 	println("вы заказали " + strconv.Itoa(*count) + " " + *item)
