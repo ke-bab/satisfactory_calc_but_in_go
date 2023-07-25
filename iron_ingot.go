@@ -1,20 +1,18 @@
-package resources
-
-import "factory-calc/recipes"
+package main
 
 type IronIngot struct {
-	Receipt recipes.Receipt
+	Receipt Receipt
 	Name    string
 }
 
 func NewIronIngot() *IronIngot {
 	return &IronIngot{
-		Receipt: []Resource{&IronOre{Deps: []Resource{}}},
+		Receipt: &IronOre{},
 		Name:    "iron ingot",
 	}
 }
 
-func (ii *IronIngot) GetReceipt() recipes.Receipt {
+func (ii *IronIngot) GetReceipt() Receipt {
 	return ii.Receipt
 }
 

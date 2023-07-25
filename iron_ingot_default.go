@@ -1,13 +1,11 @@
-package recipes
-
-import "factory-calc/resources"
+package main
 
 type IronIngotDefaultReceipt struct {
-	IronIngotResource resources.Resource
+	IronIngotResource Resource
 	Requirements      []Receipt
 }
 
-func (self *IronIngotDefaultReceipt) GetResource() resources.Resource {
+func (self *IronIngotDefaultReceipt) GetResource() Resource {
 	return self.IronIngotResource
 }
 
