@@ -1,18 +1,22 @@
-package main
+package app
+
+import (
+	"factory-calc/interfaces"
+)
 
 type IronIngot struct {
-	Receipt Receipt
+	Receipt interfaces.Receipt
 	Name    string
 }
 
 func NewIronIngot() *IronIngot {
 	return &IronIngot{
-		Receipt: &IronOre{},
+		Receipt: NewIronIngotDefaultRecipe(),
 		Name:    "iron ingot",
 	}
 }
 
-func (ii *IronIngot) GetReceipt() Receipt {
+func (ii *IronIngot) GetReceipt() interfaces.Receipt {
 	return ii.Receipt
 }
 

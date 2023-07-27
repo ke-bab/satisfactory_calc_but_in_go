@@ -1,6 +1,7 @@
 package main
 
 import (
+	"factory-calc/app"
 	"flag"
 	"os"
 	"strconv"
@@ -15,9 +16,9 @@ func main() {
 		os.Exit(1)
 	}
 	println("вы заказали " + strconv.Itoa(*count) + " " + *item)
-	ii := NewIronIngot()
+	ii := app.NewIronIngot()
 	requirements := ii.GetReceipt().GetResourceRequirements()
 	for _, r := range requirements {
-		println("ii состоит из " + r.GetResource().GetName())
+		println("ii состоит из " + r.GetName())
 	}
 }

@@ -1,8 +1,8 @@
-package main
+package interfaces
 
 type Receipt interface {
 	GetResource() Resource
-	GetResourceRequirements() []Receipt
+	GetResourceRequirements() []Requirement
 }
 
 type Resource interface {
@@ -11,6 +11,6 @@ type Resource interface {
 }
 
 type Requirement interface {
-	GetResource() Resource
+	Resource
 	GetCount() int
 }
