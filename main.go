@@ -1,11 +1,25 @@
 package main
 
 import (
-	"factory-calc/app"
+	"encoding/json"
 	"flag"
 	"os"
 	"strconv"
 )
+
+type RecipesData struct {
+	NativeClass string       `json:"NativeClass"`
+	Classes     []RecipeData `json:"Classes"`
+}
+
+type RecipeData struct {
+	ClassName              string `json:"ClassName"`
+	MDisplayName           string `json:"mDisplayName"`
+	MIngredients           string `json:"mIngredients"`
+	MProduct               string `json:"mProduct"`
+	MManufactoringDuration string `json:"mManufactoringDuration"`
+	MProducedIn            string `json:"mProducedIn"`
+}
 
 func main() {
 	item := flag.String("rname", "", "resource name you want to calc, like: -rname=modular-engine")
@@ -16,9 +30,21 @@ func main() {
 		os.Exit(1)
 	}
 	println("вы заказали " + strconv.Itoa(*count) + " " + *item)
-	ii := app.NewIronIngot()
-	requirements := ii.GetReceipt().GetResourceRequirements()
-	for _, r := range requirements {
-		println("ii состоит из " + r.GetName())
+
+	file, err := os.ReadFile("recipes.json")
+	handleErr(err)
+	var recipeData = RecipesData{}
+	err = json.Unmarshal(file, &recipeData)
+	handleErr(err)
+
+	for _, class := range recipeData.Classes {
+		println(class.ClassName)
+	}
+}
+
+func handleErr(err error) {
+	if err != nil {
+		println(err.Error())
+		os.Exit(1)
 	}
 }
