@@ -4,6 +4,7 @@ import (
 	"factory-calc/recipe_data"
 	"flag"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -32,7 +33,18 @@ func main() {
 			ManufacturingDuration: parseDuration(recipe.MManufactoringDuration),
 		})
 	}
-	println(recipes[0].ManufacturingDuration)
+
+	sort.Slice(recipes, func(i, j int) bool {
+		return recipes[i].Name <= recipes[j].Name
+	})
+	idx := sort.Search(len(recipes), func(i int) bool {
+		return recipes[i].Name >= "IngotIron"
+	})
+	if idx < len(recipes) && recipes[idx].Name == "IngotIron" {
+		println("found IngotIron: " + strconv.Itoa(idx))
+	} else {
+		println("IngotIron not found")
+	}
 }
 
 func cleanName(className string) string {
