@@ -1,25 +1,12 @@
 package main
 
 import (
-	"encoding/json"
+	"factory-calc/recipe_data"
 	"flag"
 	"os"
 	"strconv"
+	"strings"
 )
-
-type RecipesData struct {
-	NativeClass string       `json:"NativeClass"`
-	Classes     []RecipeData `json:"Classes"`
-}
-
-type RecipeData struct {
-	ClassName              string `json:"ClassName"`
-	MDisplayName           string `json:"mDisplayName"`
-	MIngredients           string `json:"mIngredients"`
-	MProduct               string `json:"mProduct"`
-	MManufactoringDuration string `json:"mManufactoringDuration"`
-	MProducedIn            string `json:"mProducedIn"`
-}
 
 func main() {
 	item := flag.String("rname", "", "resource name you want to calc, like: -rname=modular-engine")
@@ -31,15 +18,34 @@ func main() {
 	}
 	println("вы заказали " + strconv.Itoa(*count) + " " + *item)
 
-	file, err := os.ReadFile("recipes.json")
-	handleErr(err)
-	var recipeData = RecipesData{}
-	err = json.Unmarshal(file, &recipeData)
+	recipesData, err := recipe_data.ExtractData()
 	handleErr(err)
 
-	for _, class := range recipeData.Classes {
-		println(class.ClassName)
+	var recipes []Recipe
+
+	for _, recipe := range recipesData.Classes {
+		recipes = append(recipes, Recipe{
+			Ingredients:           nil,
+			Products:              nil,
+			Name:                  cleanName(recipe.ClassName),
+			ProducedIn:            recipe.MProducedIn,
+			ManufacturingDuration: parseDuration(recipe.MManufactoringDuration),
+		})
 	}
+	println(recipes[0].ManufacturingDuration)
+}
+
+func cleanName(className string) string {
+	className = strings.TrimPrefix(className, "Recipe_")
+
+	return strings.TrimSuffix(className, "_C")
+}
+
+func parseDuration(duration string) int {
+	var float, err = strconv.ParseFloat(duration, 32)
+	handleErr(err)
+
+	return int(float)
 }
 
 func handleErr(err error) {
