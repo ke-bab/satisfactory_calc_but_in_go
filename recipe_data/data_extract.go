@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func ExtractData() (*RecipesData, error) {
-	file, err := os.ReadFile("recipes.json")
+func ExtractData(filepath string) (*RecipesData, error) {
+	file, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}
