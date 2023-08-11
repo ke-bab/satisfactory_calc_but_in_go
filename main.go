@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	wireRecipe := NewRecipeWire()
+	wireRecipe := NewRecipeWire(4)
 	wireRecipe.Ingredients[0].Connect(NewRecipeCopperIngot())
 	recursiveWalk(wireRecipe)
 

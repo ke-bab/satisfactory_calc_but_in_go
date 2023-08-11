@@ -1,19 +1,19 @@
 package main
 
-func NewIngredient(name string, count float32) *Ingredient {
+func NewIngredient(name string, count float32, recipe *Recipe) *Ingredient {
 	return &Ingredient{
 		ResourceName:        name,
 		RequiredCountPerMin: count,
-		Coefficient:         1,
 		ConnectedRecipe:     nil,
 		HasNoRecipe:         HasRecipe(name),
+		ParentRecipe:        recipe,
 	}
 }
 
 func HasRecipe(name string) bool {
 	if name == "copper_ore" {
-		return false
+		return true
 	}
 
-	return true
+	return false
 }

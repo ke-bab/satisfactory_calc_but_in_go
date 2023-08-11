@@ -5,12 +5,12 @@ type Recipe struct {
 	ProductionCountPerMin float32
 	ProducedIn            string
 	Ingredients           []*Ingredient
-	Coefficient           float32
+	Multiplier            float32
 }
 
 func (r *Recipe) ChangeCoefficient(coefficient float32) {
-	r.Coefficient = coefficient
-	r.ProductionCountPerMin *= r.Coefficient
+	r.Multiplier = coefficient
+	r.ProductionCountPerMin *= r.Multiplier
 	for _, i := range r.Ingredients {
 		i.ChangeCoefficient(coefficient)
 	}
