@@ -14,11 +14,11 @@ func main() {
 
 func recursiveWalk(recipe *Recipe) {
 	for _, i := range recipe.Ingredients {
-		if i.ConnectedRecipe != nil {
-			recursiveWalk(i.ConnectedRecipe)
-		} else {
+		if i.HasNoRecipe {
 			fmt.Printf("%f\n", i.RequiredCountPerMin)
 			fmt.Printf("%s\n", i.ResourceName)
+		} else {
+			recursiveWalk(i.ConnectedRecipe)
 		}
 	}
 }
