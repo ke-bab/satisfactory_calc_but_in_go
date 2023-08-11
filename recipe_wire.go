@@ -5,12 +5,8 @@ func NewRecipeWire() *Recipe {
 		ResultName:            "wire",
 		ProducedIn:            "constructor",
 		ProductionCountPerMin: 30,
-		Ingredients: []Ingredient{
-			{
-				ResourceName:        "copper_ingot",
-				RequiredCount:       1,
-				RequiredCountPerMin: 15,
-			},
+		Ingredients: []*Ingredient{
+			NewIngredient("copper_ingot", 15),
 		},
 		Coefficient: 1,
 	}
