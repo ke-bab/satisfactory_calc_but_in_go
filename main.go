@@ -1,10 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
 func main() {
+	wireRecipe := NewRecipeWire()
+	wireRecipe.Ingredients[0].Connect(NewRecipeCopperIngot())
+	fmt.Printf("%f\n", wireRecipe.Ingredients[0].ConnectedRecipe.ProductionCountPerMin)
+	fmt.Printf("%s\n", wireRecipe.Ingredients[0].ConnectedRecipe.ResultName)
 
 }
 
