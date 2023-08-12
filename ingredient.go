@@ -4,20 +4,22 @@ type Ingredient struct {
 	ResourceName        string
 	RequiredCountPerMin float32
 	ConnectedRecipe     *Recipe
-	HasNoRecipe         bool
+	IsPrimitive         bool
 	ParentRecipe        *Recipe
+}
+
+func (i *Ingredient) GetRequiredCountWithMulti() float32 {
+	return i.RequiredCountPerMin * i.ParentRecipe.Multiplier
 }
 
 func (i *Ingredient) Connect(recipe *Recipe) {
 	i.ConnectedRecipe = recipe
 	diffMultiplier := i.RequiredCountPerMin * i.ParentRecipe.Multiplier / recipe.ProductionCountPerMin
-	i.ConnectedRecipe.ChangeCoefficient(diffMultiplier)
+	i.ConnectedRecipe.SetMulti(diffMultiplier)
 }
 
-func (i *Ingredient) ChangeCoefficient(coefficient float32) {
-	i.ParentRecipe.Multiplier = coefficient
-	i.RequiredCountPerMin *= coefficient
+func (i *Ingredient) SetMultiForConnectedRecipe(multiplier float32) {
 	if i.ConnectedRecipe != nil {
-		i.ConnectedRecipe.ChangeCoefficient(coefficient)
+		i.ConnectedRecipe.SetMulti(multiplier)
 	}
 }

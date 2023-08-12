@@ -1,14 +1,14 @@
 package main
 
-func NewRecipeWire(multiplier float32) *Recipe {
+// NewRecipeWire todo: create base constructor for every recipe to set default values
+func NewRecipeWire() *Recipe {
 	recipe := &Recipe{
-		ResultName:            "wire",
+		ResultName:            wire,
 		ProducedIn:            "constructor",
 		ProductionCountPerMin: 30,
 		Ingredients:           []*Ingredient{},
-		Multiplier:            multiplier,
 	}
-	copper := NewIngredient("copper_ingot", 15, recipe)
+	copper := NewIngredient(copperIngot, 15, recipe)
 	recipe.Ingredients = append(recipe.Ingredients, copper)
 
 	return recipe

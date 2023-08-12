@@ -6,20 +6,30 @@ import (
 )
 
 func main() {
-	wireRecipe := NewRecipeWire(4)
-	wireRecipe.Ingredients[0].Connect(NewRecipeCopperIngot())
-	recursiveWalk(wireRecipe)
+	wireRecipe := NewRecipeWire()
+	wireRecipe.SetMulti(1)
+	wireRecipe.findIngredientByName(copperIngot).Connect(NewRecipeCopperIngot())
+	printPrimitiveIngredients(wireRecipe)
 
+	catWireRecipe := NewRecipeCateriumWire()
+	catWireRecipe.SetMulti(1)
+	catWireRecipe.findIngredientByName(copperIngot).Connect(NewRecipeCopperIngot())
+	catWireRecipe.findIngredientByName(cateriumIngot).Connect(NewRecipeCateriumIngot())
+	printPrimitiveIngredients(catWireRecipe)
 }
 
-func recursiveWalk(recipe *Recipe) {
-	for _, i := range recipe.Ingredients {
-		if i.HasNoRecipe {
-			fmt.Printf("%f\n", i.RequiredCountPerMin)
-			fmt.Printf("%s\n", i.ResourceName)
-		} else {
-			recursiveWalk(i.ConnectedRecipe)
+func printPrimitiveIngredients(recipe *Recipe) {
+	if recipe != nil && recipe.Ingredients != nil {
+		for _, i := range recipe.Ingredients {
+			if i.IsPrimitive {
+				fmt.Printf("%f\n", i.GetRequiredCountWithMulti())
+				fmt.Printf("%s\n", i.ResourceName)
+			} else {
+				printPrimitiveIngredients(i.ConnectedRecipe)
+			}
 		}
+	} else {
+		panic("you printed recipe with no connected ingredient recipe")
 	}
 }
 
