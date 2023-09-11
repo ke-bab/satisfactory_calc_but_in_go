@@ -5,14 +5,11 @@ type RecipesData struct {
 	Classes     []RecipeData `json:"Classes"`
 }
 
-// ProducerForRecipeWithNoIngredients this is how we understand that we found resource which has no ingredients (ores, oil)
-const ProducerForRecipeWithNoIngredients = "Build_Converter"
-
 type RecipeData struct {
-	ClassName              string `json:"ClassName"`
-	MDisplayName           string `json:"mDisplayName"`
-	MIngredients           string `json:"mIngredients"`
-	MProduct               string `json:"mProduct"`
-	MManufactoringDuration string `json:"mManufactoringDuration"`
-	MProducedIn            string `json:"mProducedIn"`
+	ClassName             string `json:"ClassName"`
+	DisplayName           string `json:"mDisplayName"`
+	Ingredients           string `json:"mIngredients"`
+	Products              string `json:"mProduct"`
+	ManufactoringDuration string `json:"mManufactoringDuration"`
+	ProducedIn            string `json:"mProducedIn"`
 }

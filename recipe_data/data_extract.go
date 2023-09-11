@@ -17,3 +17,14 @@ func ExtractData(filepath string) (*RecipesData, error) {
 	}
 	return &recipeData, nil
 }
+
+func ParseDescription(str string) string {
+	// trim outer braces
+	str = trimBraces(str)
+	// parse one or more pairs in braces and get slice
+	return ""
+}
+
+func trimBraces(str string) string {
+	return str[1 : len(str)-1]
+}
