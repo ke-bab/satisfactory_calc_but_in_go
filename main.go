@@ -9,12 +9,11 @@ import (
 func main() {
 	recipes, err := rd.ExtractData("recipes.json")
 	handleErr(err)
-	found := findLike(recipes, "AluminumCasing")
+	found := findByProduct(recipes, "SpaceElevatorPart_3")
 	for _, r := range found {
 		minMulti := 60.0 / float32(r.ManufactoringDuration)
-		fmt.Printf("found %q recipe: \n", r.Name)
+		fmt.Printf("found %q recipe(%s): \n", r.Name, r.DisplayName)
 		for _, i := range r.Ingredients {
-
 			println(fmt.Sprintf("- x%d %q, %.2f/min", i.Amount, i.Name, float32(i.Amount)*minMulti))
 		}
 	}
@@ -27,7 +26,7 @@ func handleErr(err error) {
 	}
 }
 
-func findLike(recipes []rd.Recipe, str string) []rd.Recipe {
+func findByProduct(recipes []rd.Recipe, str string) []rd.Recipe {
 	var found []rd.Recipe
 	for _, r := range recipes {
 		if r.ContainsProduct(str) {

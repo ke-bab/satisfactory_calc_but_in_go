@@ -33,7 +33,7 @@ func ExtractData(filepath string) ([]Recipe, error) {
 			return nil, err
 		}
 		recipes = append(recipes, Recipe{
-			Name:                  recipe.ClassName,
+			Name:                  cutPatternFromClassname(recipe.ClassName),
 			DisplayName:           recipe.DisplayName,
 			Ingredients:           ingredients,
 			Products:              products,
@@ -56,7 +56,7 @@ type Recipe struct {
 
 func (r Recipe) ContainsProduct(str string) bool {
 	for _, p := range r.Products {
-		if strings.Contains(p.Name, str) {
+		if p.Name == str {
 			return true
 		}
 	}
@@ -145,12 +145,18 @@ func cutItemNameFromClassDefinition(str string) string {
 	className := strings.Split(str, ".")[1]
 	bpIndex := strings.Index(className, "BP_")
 	descIndex := strings.Index(className, "Desc_")
+	// we search _C\" because if we search just _C we will find invalid index, like in Desc_Cement_C (there two _C)
+	suffixIndex := strings.Index(className, "_C\"")
 	if bpIndex != -1 {
-		return className[3 : len(className)-4]
+		return className[bpIndex+3 : suffixIndex]
 	}
 	if descIndex != -1 {
-		return className[5 : len(className)-4]
+		return className[descIndex+5 : suffixIndex]
 	}
 
-	return className[:len(className)-4]
+	return className[:suffixIndex]
+}
+
+func cutPatternFromClassname(str string) string {
+	return str[7 : len(str)-2]
 }
