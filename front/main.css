@@ -1,9 +1,13 @@
 .cell {
-    border: 2px solid black;
     position: absolute;
     text-align: center;
+    vertical-align: baseline;
     width: 6em;
     height: 3em;
+    border-radius: 0.4em;
+    background-color: #c2c2c2;
+    color: #914d00;
+    font-family: "Courier New", Courier, monospace;
 }
 
 #grid {

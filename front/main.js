@@ -1,8 +1,23 @@
-// let cells = document.querySelectorAll(".cell")
-//
-// cells[1].style.left = "8em"
+class Grid {
+    /** @type {string[][]} */
+    grid = []
 
-let grid = []
+    setCell(x, y, text) {
+        if (this.grid[x] === undefined) {
+            this.grid[x] = []
+        }
+        this.grid[x][y] = text
+    }
+
+    getGrid() {
+        return this.grid
+    }
+}
+
+class RecipeNode {
+    /** @type {RecipeNode[]} */
+    childNodes;
+}
 
 // high level api for UI
 // set recipe
@@ -16,26 +31,27 @@ let grid = []
 // render
 // create cell
 
-grid[0] = []
-grid[1] = []
-grid[0][0] = "recipe1"
-grid[1][0] = "recipe2"
-grid[1][3] = "recipe3"
-
 const width = 6
 const height = 3
 
-render(grid)
+let grid = new Grid()
+let v = grid.getGrid()
+grid.setCell(0,0 ,"recipe1")
+grid.setCell(1,0 ,"recipe1")
+grid.setCell(1,3 ,"recipe1")
+
+render(grid.getGrid())
 
 /**
- * @param {Array.<Array>} grid
+ * @param {Array.<Array.<string>>} grid
  */
 function render(grid) {
+    let gridDiv = document.querySelector("#grid")
+    gridDiv.innerHTML = ''
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[i].length; j++) {
-            createCell(i,j, grid[i][j])
+            createCell(i, j, grid[i][j])
         }
-
     }
 }
 
