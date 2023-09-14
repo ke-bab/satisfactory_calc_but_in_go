@@ -19,15 +19,15 @@ class RecipeNode {
     childNodes;
 }
 
-// high level api for UI
+// ui api
 // set recipe
 // remove recipe (set to null)
 
-// api for positioning (model layer)
+// logic model api
 // resize recipe (global recursive)
 // insert recipe into cell in grid
 
-// api for visual render
+// render api
 // render
 // create cell
 
