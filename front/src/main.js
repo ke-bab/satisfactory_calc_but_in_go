@@ -10,20 +10,36 @@ class Position {
     }
 }
 
+class Product {
+    name = ''
+    amount = 0
+}
+
+class Ingredient {
+    name = ''
+    amount = 0
+    recipeConnected = false
+}
+
 class RecipeNode {
+    /** @type {Product} */
+    product = null
+    /** @type {Ingredient[]} */
+    ingredients = []
+    multiplier = 1.0
     name = ''
     size = 1
     /** @type {?RecipeNode} */
     parentNode = null
     /** @type {RecipeNode[]} */
-    ingredients = []
+    childNodes = []
 
     constructor(name) {
         this.name = name;
     }
 
     removeIngredientRecipe() {
-        // todo: implement
+
     }
 
     /**
@@ -31,17 +47,17 @@ class RecipeNode {
      */
     addIngredientRecipe(newRecipe) {
         newRecipe.parentNode = this
-        this.ingredients.push(newRecipe)
+        this.childNodes.push(newRecipe)
         this.updateSizeRecursive()
     }
 
     updateSizeRecursive() {
         this.size = 0
-        if (this.ingredients.length === 0) {
+        if (this.childNodes.length === 0) {
             this.size = 1
         } else {
-            for (let i = 0; i < this.ingredients.length; i++) {
-                this.size += this.ingredients[i].size
+            for (let i = 0; i < this.childNodes.length; i++) {
+                this.size += this.childNodes[i].size
             }
         }
         if (this.parentNode !== null) {
@@ -51,32 +67,19 @@ class RecipeNode {
 
 }
 
-// ui api
-// set recipe
-// remove recipe (set to null)
-
-// logic model api
-// resize recipe (global recursive)
-// insert recipe into cell in grid
-
-// render api
-// render
-// create cell
-
-
 /**
  * @param {RecipeNode} recipe
  * @param {Position} pos
  */
 function renderRecursive(recipe, pos) {
     createCell(pos.x, pos.y, recipe.name)
-    for (let i = 0; i < recipe.ingredients.length; i++) {
+    for (let i = 0; i < recipe.childNodes.length; i++) {
         let y = pos.y + i
         if (i > 0) {
-            y = pos.y + i + (recipe.ingredients[i-1].size -1)
+            y = pos.y + i + (recipe.childNodes[i-1].size -1)
         }
         renderRecursive(
-            recipe.ingredients[i],
+            recipe.childNodes[i],
             new Position(pos.x + 1, y)
         )
     }
@@ -106,14 +109,18 @@ function createCell(x, y, content) {
 const width = 6
 const height = 3
 
-let rec1 = new RecipeNode("iron ingot")
+jsonData = {
+
+}
+
+let ironIngot = new RecipeNode("iron ingot")
 let ironOre = new RecipeNode("iron ore")
-rec1.addIngredientRecipe(ironOre)
+ironIngot.addIngredientRecipe(ironOre)
 ironOre.addIngredientRecipe(new RecipeNode("iron some1"))
 ironOre.addIngredientRecipe(new RecipeNode("iron some 2"))
 let copper = new RecipeNode("copper ore")
-rec1.addIngredientRecipe(copper)
+ironIngot.addIngredientRecipe(copper)
 copper.addIngredientRecipe(new RecipeNode("copper sheet"))
 copper.addIngredientRecipe(new RecipeNode("copper ingot"))
 
-renderRecursive(rec1, new Position())
+renderRecursive(ironIngot, new Position())
