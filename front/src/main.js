@@ -12,6 +12,7 @@ class Position {
 
 class RecipeNode {
     name = ''
+    size = 1
     /** @type {?RecipeNode} */
     parentNode = null
     /** @type {RecipeNode[]} */
@@ -31,7 +32,23 @@ class RecipeNode {
     addIngredientRecipe(newRecipe) {
         newRecipe.parentNode = this
         this.ingredients.push(newRecipe)
+        this.updateSizeRecursive()
     }
+
+    updateSizeRecursive() {
+        this.size = 0
+        if (this.ingredients.length === 0) {
+            this.size = 1
+        } else {
+            for (let i = 0; i < this.ingredients.length; i++) {
+                this.size += this.ingredients[i].size
+            }
+        }
+        if (this.parentNode !== null) {
+            this.parentNode.updateSizeRecursive()
+        }
+    }
+
 }
 
 // ui api
@@ -54,9 +71,13 @@ class RecipeNode {
 function renderRecursive(recipe, pos) {
     createCell(pos.x, pos.y, recipe.name)
     for (let i = 0; i < recipe.ingredients.length; i++) {
+        let y = pos.y + i
+        if (i > 0) {
+            y = pos.y + i + (recipe.ingredients[i-1].size -1)
+        }
         renderRecursive(
             recipe.ingredients[i],
-            new Position(pos.x + 1,pos.y + i)
+            new Position(pos.x + 1, y)
         )
     }
 }
@@ -86,7 +107,10 @@ const width = 6
 const height = 3
 
 let rec1 = new RecipeNode("iron ingot")
-rec1.addIngredientRecipe(new RecipeNode("iron ore"))
+let ironOre = new RecipeNode("iron ore")
+rec1.addIngredientRecipe(ironOre)
+ironOre.addIngredientRecipe(new RecipeNode("iron some1"))
+ironOre.addIngredientRecipe(new RecipeNode("iron some 2"))
 let copper = new RecipeNode("copper ore")
 rec1.addIngredientRecipe(copper)
 copper.addIngredientRecipe(new RecipeNode("copper sheet"))
