@@ -17,3 +17,6 @@
     position: absolute;
 }
 
+body {
+    background-image: url("/static/images/back1.jpg");
+}
