@@ -95,13 +95,26 @@ function createCell(x, y, content) {
         return
     }
     let gridDiv = document.querySelector("#grid")
-    const newDiv = document.createElement("div")
-    newDiv.classList.add("cell")
-    newDiv.style.left = x * width + "em"
-    newDiv.style.top = y * height + "em"
-    const text = document.createTextNode(content)
-    newDiv.appendChild(text)
-    gridDiv.appendChild(newDiv)
+    const cell = document.createElement("div")
+    cell.classList.add("cell")
+    cell.style.left = x * width + "em"
+    cell.style.top = y * height + "em"
+
+    const leftSide = document.createElement("div")
+    leftSide.style.width = width / 2 + "em"
+    const rightSide = document.createElement("div")
+    rightSide.style.width = width / 2 + "em"
+    rightSide.style.height = "37px"
+
+    const  image = document.createElement("img")
+    image.src = "./images/Biomass.png"
+    image.style.width = "2em"
+
+    cell.appendChild(leftSide)
+    cell.appendChild(rightSide)
+    leftSide.appendChild(image)
+
+    gridDiv.appendChild(cell)
 }
 
 
