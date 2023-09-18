@@ -135,7 +135,7 @@ function createCell(x, y, recipe, deepLevel) {
     })
 
     const image = document.createElement("img")
-    image.src = "/static/images/Iron_Ore.png"
+    image.src = "/static/images/Assembler.png"
     image.style.width = width / 2 + "em"
 
     cell.appendChild(leftSide)
@@ -161,6 +161,8 @@ let copper = new RecipeNode("copper ore")
 ironIngot.addIngredientRecipe(copper)
 copper.addIngredientRecipe(new RecipeNode("copper sheet"))
 copper.addIngredientRecipe(new RecipeNode("copper ingot"))
+
+
 
 window.onload = (event) => {
     fetch("/resource-name-list")
