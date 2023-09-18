@@ -163,13 +163,16 @@ copper.addIngredientRecipe(new RecipeNode("copper sheet"))
 copper.addIngredientRecipe(new RecipeNode("copper ingot"))
 
 
-
 window.onload = (event) => {
     fetch("/resource-name-list")
         .then((response) => response.json())
         .then((json) => {
             fillResourceNames(json)
         });
+    let wanted_input = document.querySelector('#wanted_input')
+    wanted_input.addEventListener('change', () => {
+
+    })
 };
 
 class Option {

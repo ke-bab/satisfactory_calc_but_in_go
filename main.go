@@ -5,6 +5,7 @@ import (
 	rd "factory-calc/recipe_data"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -39,10 +40,12 @@ func findByProduct(recipes []rd.Recipe, str string) []rd.Recipe {
 func webServer(recipes []rd.Recipe) {
 	var namesList []SelectNames
 	for _, r := range recipes {
-		namesList = append(namesList, SelectNames{
-			r.Name,
-			r.DisplayName,
-		})
+		if !strings.Contains(r.Name, "Alternate") {
+			namesList = append(namesList, SelectNames{
+				r.Name,
+				r.DisplayName,
+			})
+		}
 	}
 	namesJson, err := json.Marshal(namesList)
 	handleErr(err)

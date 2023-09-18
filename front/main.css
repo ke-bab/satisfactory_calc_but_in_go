@@ -44,6 +44,18 @@ body {
     justify-content: space-evenly;
 }
 
+#wanted_input {
+    width: 90%;
+}
+
+#amount_input {
+    width: 90%;
+}
+
+#recipe_input {
+    width: 95%;
+}
+
 #selected-control {
     height: 20%;
     border-radius: 0.4em;
