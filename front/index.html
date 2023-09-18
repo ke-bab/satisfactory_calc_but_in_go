@@ -7,13 +7,35 @@
     <title>Planner</title>
     <link rel="stylesheet" href="/static/main.css">
 </head>
+
 <body>
+<div id="planner">
+    <div id="left-panel">
+        <div id="root-control">
+            <div>
+                <input list="wanted_resource" placeholder="Type wanted part:">
+                <datalist id="wanted_resource">
+                </datalist>
+            </div>
+            <div>
+                <select>
+                    <option value="">Select available recipe</option>
+                </select>
+            </div>
+            <div>
+                <input type="number" placeholder="Choose amount" min="0" value="1">
+            </div>
+        </div>
+        <div>
 
-<input list="wanted_resource">
-<datalist id="wanted_resource">
-</datalist>
+        </div>
+        <div id="selected-control">
 
-<div id="grid"></div>
+        </div>
+    </div>
+
+    <div id="grid"></div>
+</div>
 
 <script src="/static/src/main.js"></script>
 
