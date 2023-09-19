@@ -19,6 +19,9 @@ func ExtractData(filepath string) ([]Recipe, error) {
 		return nil, err
 	}
 	for _, recipe := range recipeData.Classes {
+		if shouldBeExcluded(recipe.ProducedIn) {
+			continue
+		}
 		ingredients, err := parseDescription(recipe.Ingredients)
 		if err != nil {
 			return nil, err
@@ -46,12 +49,12 @@ func ExtractData(filepath string) ([]Recipe, error) {
 }
 
 type Recipe struct {
-	Name                  string
-	DisplayName           string
-	Ingredients           []ResourceDescription
-	Products              []ResourceDescription
-	ManufactoringDuration int
-	ProducedIn            string
+	Name                  string                `json:"name"`
+	DisplayName           string                `json:"displayName"`
+	Ingredients           []ResourceDescription `json:"ingredients"`
+	Products              []ResourceDescription `json:"products"`
+	ManufactoringDuration int                   `json:"manufactoringDuration"`
+	ProducedIn            string                `json:"producedIn"`
 }
 
 func (r Recipe) ContainsProduct(str string) bool {
@@ -65,8 +68,8 @@ func (r Recipe) ContainsProduct(str string) bool {
 }
 
 type ResourceDescription struct {
-	Amount int
-	Name   string
+	Amount int    `json:"amount"`
+	Name   string `json:"name"`
 }
 
 func parseDescription(str string) ([]ResourceDescription, error) {
@@ -159,4 +162,12 @@ func cutItemNameFromClassDefinition(str string) string {
 
 func cutPatternFromClassname(str string) string {
 	return str[7 : len(str)-2]
+}
+
+func parseProducedIn(str string) string {
+	return "" // todo: implement
+}
+
+func shouldBeExcluded(str string) bool {
+	return strings.Contains(str, "BP_BuildGun_C") || strings.Contains(str, "BP_WorkshopComponent_C") || str == ""
 }

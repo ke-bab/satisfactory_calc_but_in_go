@@ -5,7 +5,6 @@ import (
 	rd "factory-calc/recipe_data"
 	"net/http"
 	"os"
-	"strings"
 )
 
 func main() {
@@ -37,31 +36,76 @@ func findByProduct(recipes []rd.Recipe, str string) []rd.Recipe {
 	return found
 }
 
-func webServer(recipes []rd.Recipe) {
-	var namesList []SelectNames
-	for _, r := range recipes {
-		if !strings.Contains(r.Name, "Alternate") {
-			namesList = append(namesList, SelectNames{
-				r.Name,
-				r.DisplayName,
-			})
+func containsName(str string, list []SelectNames) bool {
+	for _, name := range list {
+		if name.Name == str {
+			return true
 		}
 	}
-	namesJson, err := json.Marshal(namesList)
+
+	return false
+}
+
+func webServer(recipes []rd.Recipe) {
+	var namesList []SelectNames
+
+	var resourceNames []SelectNames
+
+	for _, r := range recipes {
+		for _, p := range r.Products {
+			if !containsName(p.Name, resourceNames) {
+				resourceNames = append(resourceNames, SelectNames{
+					Name:        p.Name,
+					DisplayName: p.Name,
+				})
+			}
+		}
+		//if !strings.Contains(r.Name, "Alternate") {
+		namesList = append(namesList, SelectNames{
+			r.Name,
+			r.DisplayName,
+		})
+		//}
+	}
+	resources, err := json.Marshal(resourceNames)
+	//namesJson, err := json.Marshal(namesList)
 	handleErr(err)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		mainHtml, _ := os.ReadFile("./front/index.html")
 		_, err := w.Write(mainHtml)
 		if err != nil {
-			w.WriteHeader(422)
+			w.WriteHeader(400)
 			return
 		}
 	})
 	http.HandleFunc("/resource-name-list", func(w http.ResponseWriter, r *http.Request) {
-		_, err = w.Write(namesJson)
+		w.Header().Add("Content-Type", "application/json")
+		_, err = w.Write(resources)
 		if err != nil {
-			w.WriteHeader(422)
+			w.WriteHeader(400)
+			return
+		}
+	})
+	http.HandleFunc("/find-recipe-by-product", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		name := r.URL.Query().Get("product")
+		var found []rd.Recipe
+		for _, r := range recipes {
+			if r.ContainsProduct(name) {
+				found = append(found, r)
+			}
+		}
+		if found != nil {
+			jsonRecipe, err := json.Marshal(found)
+			if err != nil {
+				println(err.Error())
+				w.WriteHeader(400)
+				return
+			}
+			_, _ = w.Write(jsonRecipe)
+		} else {
+			w.WriteHeader(400)
 			return
 		}
 	})

@@ -169,11 +169,81 @@ window.onload = (event) => {
         .then((json) => {
             fillResourceNames(json)
         });
-    let wanted_input = document.querySelector('#wanted_input')
-    wanted_input.addEventListener('change', () => {
-
+    let wanted_resource_input = document.querySelector('#wanted_resource_input')
+    wanted_resource_input.addEventListener('change', (e) => {
+        if (e.target.value === '') {
+            return
+        }
+        fetch('/find-recipe-by-product?product=' + e.target.value)
+            .then((response) => response.json())
+            .then((json) => fillRecipeOptions(json))
+            .catch(error => {
+                document.querySelector('#recipe_select').style.display = 'none'
+                document.querySelector('#amount').style.display = 'none'
+            })
+    })
+    let recipe_select = document.querySelector('#recipe_select')
+    recipe_select.addEventListener('change', (event) => {
+        let recipe = event.target.options[event.target.selectedIndex].recipe
+        fillAmount(recipe)
     })
 };
+
+/**
+ * @param {Recipe} recipe
+ */
+function fillAmount(recipe) {
+    let amountEl = document.querySelector('#amount')
+    amountEl.style.display = 'block'
+    // add img src
+    let amount_input = document.querySelector("#amount_input")
+    let wanted_input = document.querySelector('#wanted_resource_input')
+    let resource = getProduct(wanted_input.value, recipe.products)
+    amount_input.value = 60 / recipe.manufactoringDuration * resource.amount
+}
+
+class Resource {
+    name
+    amount
+}
+
+
+/**
+ * @param {string} name
+ * @param {Resource[]} res
+ * @return {?Resource}
+ */
+function getProduct(name, res) {
+    return res.find((r) => r.name === name, null)
+}
+
+class Recipe {
+    name = ''
+    displayName = ''
+    /** @type {Resource[]} */
+    ingredients = []
+    /** @type {Resource[]} */
+    products = []
+    manufactoringDuration = 1
+    producedIn = ''
+}
+
+/**
+ * @param {Recipe[]} list
+ */
+function fillRecipeOptions(list) {
+    let recipe_select = document.querySelector('#recipe_select')
+    recipe_select.innerHTML = ''
+    recipe_select.style.display = 'block'
+    list.forEach((recipe, index) => {
+        let opt = document.createElement("option")
+        opt.value = recipe.name
+        opt.innerHTML = recipe.displayName
+        opt.recipe = recipe
+        recipe_select.appendChild(opt)
+    })
+    recipe_select.dispatchEvent(new Event("change"))
+}
 
 class Option {
     name
@@ -184,7 +254,7 @@ class Option {
  * @param {Option[]} list
  */
 function fillResourceNames(list) {
-    let datalist = document.querySelector('#wanted_resource')
+    let datalist = document.querySelector('#wanted_resource_list')
     for (let i = 0; i < list.length; i++) {
         let newOption = document.createElement("option")
         newOption.value = list[i].name

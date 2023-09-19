@@ -34,26 +34,33 @@ body {
 }
 
 #root-control {
-    height: 20%;
+    height: 30%;
     border-radius: 0.4em;
     background-color: rgb(255 255 255 / 0.2);
     backdrop-filter: blur(5px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
 }
-
-#wanted_input {
+#root-control > * {
     width: 90%;
 }
 
+#recipe_select {
+    display: none;
+}
+
+#amount {
+    display: none;
+}
+
+#amount_img {
+    width: 3em;
+    display: block;
+}
 #amount_input {
-    width: 90%;
-}
-
-#recipe_input {
-    width: 95%;
+    width: 4em;
 }
 
 #selected-control {
