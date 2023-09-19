@@ -24,6 +24,8 @@ class Ingredient {
 class RecipeNode {
     /** @type {Recipe} */
     recipe
+    /** @type {number} */
+    multiplier= 1.0
     /** @type {?HTMLElement} */
     element = null
     size = 1
@@ -116,19 +118,43 @@ function createCell(x, y, recipeNode, deepLevel) {
     leftDiv.classList.add("left")
     let rightDiv = document.createElement('div')
     rightDiv.classList.add("right")
+
     cell.appendChild(leftDiv)
     cell.appendChild(rightDiv)
-    // let imageDiv = document.createElement('div')
+
+    createIngredientDivs(rightDiv, recipeNode)
+
+
+
     let factoryImage = document.createElement('img')
     factoryImage.src = '/static/images/Assembler.png'
     leftDiv.appendChild(factoryImage)
-    // imageDiv.appendChild(factoryImage)
     let factoryCount = document.createElement('div')
     factoryCount.innerHTML = 'x2'
     leftDiv.appendChild(factoryCount)
 
 
     gridDiv.appendChild(cell)
+}
+
+/**
+ * @param {HTMLElement} rightDiv
+ * @param {RecipeNode} recipeNode
+ */
+function createIngredientDivs(rightDiv, recipeNode) {
+    recipeNode.recipe.ingredients.forEach((ingredient) => {
+        let ingredientDiv = document.createElement('div')
+        ingredientDiv.classList.add('ingredient')
+        let image = document.createElement('img')
+        image.src = '/static/images/Assembler.png'
+        image.classList.add('image')
+        let countDiv = document.createElement('div')
+        countDiv.classList.add('count')
+        countDiv.innerHTML = ingredient.amount + ' p/m'
+        ingredientDiv.appendChild(image)
+        ingredientDiv.appendChild(countDiv)
+        rightDiv.appendChild(ingredientDiv)
+    })
 }
 
 
