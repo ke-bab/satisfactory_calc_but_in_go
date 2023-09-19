@@ -135,6 +135,7 @@ function createCell(x, y, recipeNode, deepLevel) {
 
 
     gridDiv.appendChild(cell)
+    registerCellEvent()
 }
 
 /**
@@ -203,6 +204,13 @@ window.onload = (event) => {
         renderRecursive(ironIngot, new Position())
     })
 };
+
+function registerCellEvent() {
+    let cells = document.querySelectorAll('.cell')
+    cells.forEach((cell) => cell.addEventListener('click',(event) => {
+
+    }))
+}
 
 /**
  * @param {Recipe} recipe
