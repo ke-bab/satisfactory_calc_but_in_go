@@ -145,12 +145,26 @@ function createIngredientDivs(rightDiv, recipeNode) {
     recipeNode.recipe.ingredients.forEach((ingredient) => {
         let ingredientDiv = document.createElement('div')
         ingredientDiv.classList.add('ingredient')
+        let w = 100
+        let h = 100
+        let len = recipeNode.recipe.ingredients.length
+        if (len === 2) {
+            w = 50
+        }
+        if (len === 3 || len === 4) {
+            w = 50
+            h = 50
+        }
+        ingredientDiv.style.width = w + '%'
+        ingredientDiv.style.height = h + '%'
+
         let image = document.createElement('img')
         image.src = '/static/images/Assembler.png'
         image.classList.add('image')
         let countDiv = document.createElement('div')
         countDiv.classList.add('count')
-        countDiv.innerHTML = ingredient.amount + ' p/m'
+        countDiv.style.fontSize = len === 1? "1em" : "0.5em"
+        countDiv.innerHTML = ingredient.amount + '/m'
         ingredientDiv.appendChild(image)
         ingredientDiv.appendChild(countDiv)
         rightDiv.appendChild(ingredientDiv)
@@ -176,6 +190,7 @@ window.onload = (event) => {
             .catch(error => {
                 document.querySelector('#recipe_select').style.display = 'none'
                 document.querySelector('#amount').style.display = 'none'
+                document.querySelector('#grid').innerHTML = ''
             })
     })
     let recipe_select = document.querySelector('#recipe_select')

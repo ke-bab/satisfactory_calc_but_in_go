@@ -130,6 +130,9 @@ func parseResourceString(str string) (ResourceDescription, error) {
 	split := strings.Split(str, ",")
 	itemValue := cutItemNameFromClassDefinition(getValue(split[0]))
 	amountValueInt, err := strconv.Atoi(getValue(split[1]))
+	if amountValueInt >= 1000 {
+		amountValueInt = amountValueInt / 1000
+	}
 	if err != nil {
 		return ResourceDescription{}, err
 	}
