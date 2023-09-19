@@ -22,22 +22,21 @@ class Ingredient {
 }
 
 class RecipeNode {
+    /** @type {Recipe} */
+    recipe
     /** @type {?HTMLElement} */
     element = null
-    /** @type {Product} */
-    product = null
-    /** @type {Ingredient[]} */
-    ingredients = []
-    multiplier = 1.0
-    name = ''
     size = 1
     /** @type {?RecipeNode} */
     parentNode = null
     /** @type {RecipeNode[]} */
     childNodes = []
 
-    constructor(name) {
-        this.name = name;
+    /**
+     * @param {Recipe} recipe
+     */
+    constructor(recipe) {
+        this.recipe = recipe;
     }
 
     removeIngredientRecipe() {
@@ -75,21 +74,22 @@ class RecipeNode {
     }
 }
 
+
 /**
- * @param {RecipeNode} recipe
+ * @param {RecipeNode} recipeNode
  * @param {Position} pos
  * @param deepLevel
  */
-function renderRecursive(recipe, pos, deepLevel = 0) {
-    createCell(pos.x, pos.y, recipe, deepLevel)
+function renderRecursive(recipeNode, pos, deepLevel = 0) {
+    createCell(pos.x, pos.y, recipeNode, deepLevel)
     deepLevel++
-    for (let i = 0; i < recipe.childNodes.length; i++) {
+    for (let i = 0; i < recipeNode.childNodes.length; i++) {
         let y = pos.y + i
         if (i > 0) {
-            y = pos.y + i + (recipe.childNodes[i - 1].size - 1)
+            y = pos.y + i + (recipeNode.childNodes[i - 1].size - 1)
         }
         renderRecursive(
-            recipe.childNodes[i],
+            recipeNode.childNodes[i],
             new Position(pos.x + 1, y),
             deepLevel
         )
@@ -99,68 +99,37 @@ function renderRecursive(recipe, pos, deepLevel = 0) {
 /**
  * @param {number} x
  * @param {number} y
- * @param {RecipeNode} recipe
+ * @param {?RecipeNode} recipeNode
  * @param {number} deepLevel
  */
-function createCell(x, y, recipe, deepLevel) {
+function createCell(x, y, recipeNode, deepLevel) {
     let gridDiv = document.querySelector("#grid")
     let cell = document.createElement("div")
-    cell.recipe = recipe
-    cell.id = recipe.name
-    recipe.setHTMLElement(cell)
-
+    cell.recipeNode = recipeNode
+    recipeNode.setHTMLElement(cell)
 
     cell.classList.add("cell")
     cell.style.left = x * width + (deepLevel) + "em"
     cell.style.top = y * height + "em"
 
-    const leftSide = document.createElement("div")
-    leftSide.style.width = width / 2 + "em"
-    leftSide.style.height = height + "em"
-    leftSide.style.display = "inline-block"
+    let leftDiv = document.createElement('div')
+    leftDiv.classList.add("left")
+    let rightDiv = document.createElement('div')
+    rightDiv.classList.add("right")
+    cell.appendChild(leftDiv)
+    cell.appendChild(rightDiv)
+    // let imageDiv = document.createElement('div')
+    let factoryImage = document.createElement('img')
+    factoryImage.src = '/static/images/Assembler.png'
+    leftDiv.appendChild(factoryImage)
+    // imageDiv.appendChild(factoryImage)
+    let factoryCount = document.createElement('div')
+    factoryCount.innerHTML = 'x2'
+    leftDiv.appendChild(factoryCount)
 
-    const rightSide = document.createElement("div")
-    rightSide.style.width = width / 2 + "em"
-    rightSide.style.height = height + "em"
-    rightSide.style.display = "inline-block"
-    rightSide.style.boxSizing = "border-box"
-    rightSide.style.border = "2px dashed gray"
-
-
-    rightSide.addEventListener('mouseover', (event) => {
-        event.target.style.borderColor = "black"
-    })
-    rightSide.addEventListener('mouseout', (event) => {
-        event.target.style.borderColor = 'gray'
-    })
-
-    const image = document.createElement("img")
-    image.src = "/static/images/Assembler.png"
-    image.style.width = width / 2 + "em"
-
-    cell.appendChild(leftSide)
-    cell.appendChild(rightSide)
-    leftSide.appendChild(image)
 
     gridDiv.appendChild(cell)
 }
-
-
-// main begin
-const width = 6
-const height = 3
-
-jsonData = {}
-
-let ironIngot = new RecipeNode("iron_ingot")
-let ironOre = new RecipeNode("iron_ore")
-ironIngot.addIngredientRecipe(ironOre)
-ironOre.addIngredientRecipe(new RecipeNode("iron some1"))
-ironOre.addIngredientRecipe(new RecipeNode("iron some 2"))
-let copper = new RecipeNode("copper ore")
-ironIngot.addIngredientRecipe(copper)
-copper.addIngredientRecipe(new RecipeNode("copper sheet"))
-copper.addIngredientRecipe(new RecipeNode("copper ingot"))
 
 
 window.onload = (event) => {
@@ -170,6 +139,7 @@ window.onload = (event) => {
             fillResourceNames(json)
         });
     let wanted_resource_input = document.querySelector('#wanted_resource_input')
+
     wanted_resource_input.addEventListener('change', (e) => {
         if (e.target.value === '') {
             return
@@ -186,6 +156,10 @@ window.onload = (event) => {
     recipe_select.addEventListener('change', (event) => {
         let recipe = event.target.options[event.target.selectedIndex].recipe
         fillAmount(recipe)
+
+        let ironIngot = new RecipeNode(recipe)
+
+        renderRecursive(ironIngot, new Position())
     })
 };
 
@@ -263,5 +237,6 @@ function fillResourceNames(list) {
     }
 }
 
-
-renderRecursive(ironIngot, new Position())
+// main begin
+const width = 6
+const height = 3
