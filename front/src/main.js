@@ -25,7 +25,7 @@ class RecipeNode {
     /** @type {Recipe} */
     recipe
     /** @type {number} */
-    multiplier= 1.0
+    multiplier = 1.0
     /** @type {?HTMLElement} */
     cell = null
     size = 1
@@ -48,7 +48,7 @@ class RecipeNode {
     removeRecipeByProduct(recipeNode) {
         removeRecipeNodesDivsRecursive(recipeNode)
         let index = this.childNodes.indexOf(recipeNode)
-        this.childNodes.splice(index,1)
+        this.childNodes.splice(index, 1)
     }
 
     /**
@@ -177,7 +177,6 @@ function createOrUpdateCell(x, y, recipeNode, deepLevel) {
 }
 
 
-
 /**
  * @param {HTMLElement} rightDiv
  * @param {RecipeNode} recipeNode
@@ -204,7 +203,7 @@ function createIngredientDivs(rightDiv, recipeNode) {
         image.classList.add('image')
         let countDiv = document.createElement('div')
         countDiv.classList.add('count')
-        countDiv.style.fontSize = len === 1? "1em" : "0.5em"
+        countDiv.style.fontSize = len === 1 ? "1em" : "0.5em"
         countDiv.innerHTML = ingredient.amount + '/m'
         ingredientDiv.appendChild(image)
         ingredientDiv.appendChild(countDiv)
@@ -219,7 +218,8 @@ window.onload = (event) => {
         .then((json) => {
             fillResourceNames(json)
         })
-        .catch(()=> {})
+        .catch(() => {
+        })
     let wanted_resource_input = document.querySelector('#wanted_resource_input')
 
     wanted_resource_input.addEventListener('change', (e) => {
@@ -249,13 +249,14 @@ function clearTree() {
     document.querySelector('#recipe_select').style.display = 'none'
     document.querySelector('#amount').style.display = 'none'
     document.querySelector('#grid').innerHTML = ''
+    document.querySelector('#root-control').recipeNode = undefined
     document.querySelectorAll('.cell').forEach((element) => element.remove())
     document.querySelectorAll('.selected-node-control').forEach((element) => element.remove())
 }
 
 function registerCellEvent() {
     let cells = document.querySelectorAll('.cell')
-    cells.forEach((cell) => cell.addEventListener('click',(event) => {
+    cells.forEach((cell) => cell.addEventListener('click', (event) => {
         document.querySelectorAll('.selected-node-control').forEach((el) => el.style.display = 'none')
         event.target.closest('.cell').nodeControl.style.display = 'block'
     }))
@@ -274,10 +275,9 @@ function createIngredientRecipeSelector(ingredient, nodeControl) {
         let newNode = new RecipeNode(event.target.options[event.target.selectedIndex].recipe)
         newNode.mainProduct = ingredient.name
         recipeNode.addIngredientRecipe(newNode)
-        let total = document.querySelector('#total')
-        total.style.display = 'block'
-        // subtract ingreds from parent from total
-        // add product from new recipe to total
+
+        totalNeeds.add(ingredient.name, ingredient.amount)
+
         render()
     })
     let emptyOption = document.createElement('option')
@@ -300,7 +300,8 @@ function createIngredientRecipeSelector(ingredient, nodeControl) {
     fetch('/find-recipe-by-product?product=' + ingredient.name)
         .then((resp) => resp.json())
         .then((json) => fillSelect(json))
-        .catch(() => {})
+        .catch(() => {
+        })
 }
 
 /**
@@ -380,10 +381,50 @@ function fillResourceNames(list) {
     }
 }
 
+
 class TotalNeeds {
     /** @type {Map<string, number>} */
-    resources= new Map()
+    resources = new Map()
+
+    add(name, amount) {
+        let mapAmount = this.resources.get(name)
+        if (mapAmount !== undefined) {
+            this.resources.set(name, mapAmount + amount)
+        } else {
+            this.resources.set(name, amount)
+        }
+        this.update(name)
+    }
+
+    remove(name, amount) {
+
+    }
+
+    update(name) {
+        let total = document.querySelector('#total')
+        let divs = total.getElementsByTagName('div')
+        let nameDiv = undefined
+        for (let i = 0; i < divs.length; i++) {
+            if (name === divs[i].innerText) {
+                nameDiv = divs[i]
+                break
+            }
+        }
+        // let nameDiv = divs.find((div) => div.innerText === name)
+        if (nameDiv !== undefined) {
+            alert('not implemented')
+        } else {
+            let newTotalDiv = document.createElement('div')
+            let totalNameDiv = document.createElement('div')
+            let totalAmountDiv = document.createElement('div')
+            newTotalDiv.appendChild(totalNameDiv)
+            newTotalDiv.appendChild(totalAmountDiv)
+            total.appendChild(newTotalDiv)
+            totalAmountDiv.innerText = this.resources.get(name) + ''
+        }
+    }
 }
 
 const width = 10
 const height = 5
+let totalNeeds = new TotalNeeds()
