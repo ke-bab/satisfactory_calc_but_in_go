@@ -130,11 +130,20 @@ function createCell(x, y, recipeNode, deepLevel) {
     factoryImage.src = '/static/images/Assembler.png'
     leftDiv.appendChild(factoryImage)
     let factoryCount = document.createElement('div')
-    factoryCount.innerHTML = 'x2'
+    factoryCount.innerHTML = 'x' + recipeNode.multiplier
     leftDiv.appendChild(factoryCount)
 
 
     gridDiv.appendChild(cell)
+    let nodeControl = document.createElement('div')
+    nodeControl.classList.add('selected-node-control')
+    nodeControl.style.display = 'none'
+    cell.nodeControl = nodeControl
+    let leftPanel = document.querySelector('#left-panel')
+    leftPanel.appendChild(nodeControl)
+    recipeNode.recipe.ingredients.forEach((ingredient) => {
+        createIngredientRecipeSelector(ingredient, nodeControl)
+    })
     registerCellEvent()
 }
 
@@ -182,6 +191,7 @@ window.onload = (event) => {
     let wanted_resource_input = document.querySelector('#wanted_resource_input')
 
     wanted_resource_input.addEventListener('change', (e) => {
+        clearTree()
         if (e.target.value === '') {
             return
         }
@@ -189,27 +199,61 @@ window.onload = (event) => {
             .then((response) => response.json())
             .then((json) => fillRecipeOptions(json))
             .catch(error => {
-                document.querySelector('#recipe_select').style.display = 'none'
-                document.querySelector('#amount').style.display = 'none'
-                document.querySelector('#grid').innerHTML = ''
+                clearTree() // ?
             })
     })
     let recipe_select = document.querySelector('#recipe_select')
     recipe_select.addEventListener('change', (event) => {
         let recipe = event.target.options[event.target.selectedIndex].recipe
         fillAmount(recipe)
-
         let ironIngot = new RecipeNode(recipe)
-
         renderRecursive(ironIngot, new Position())
     })
 };
 
+function clearTree() {
+    document.querySelector('#recipe_select').style.display = 'none'
+    document.querySelector('#amount').style.display = 'none'
+    document.querySelector('#grid').innerHTML = ''
+    document.querySelectorAll('.cell').forEach((element) => element.remove())
+    document.querySelectorAll('.selected-node-control').forEach((element) => element.remove())
+}
+
 function registerCellEvent() {
     let cells = document.querySelectorAll('.cell')
     cells.forEach((cell) => cell.addEventListener('click',(event) => {
-
+        document.querySelectorAll('.selected-node-control').forEach((el) => el.style.display = 'none')
+        event.target.closest('.cell').nodeControl.style.display = 'block'
     }))
+}
+
+/**
+ * @param {Resource} ingredient
+ * @param {HTMLElement} nodeControl
+ */
+function createIngredientRecipeSelector(ingredient, nodeControl) {
+    let ingredientDiv = document.createElement('div')
+    let image = document.createElement('img')
+    let select = document.createElement('select')
+    let emptyOption = document.createElement('option')
+    emptyOption.value = ''
+    emptyOption.innerHTML = 'no recipe'
+    select.appendChild(emptyOption)
+    nodeControl.appendChild(ingredientDiv)
+    ingredientDiv.appendChild(image)
+    ingredientDiv.appendChild(select)
+    /** @param {Recipe[]} recipes */
+    let fillSelect = (recipes) => {
+        recipes.forEach((recipe) => {
+            let newOpt = document.createElement('option')
+            newOpt.value = recipe.name
+            newOpt.innerHTML = recipe.displayName
+            select.appendChild(newOpt)
+        })
+    }
+    fetch('/find-recipe-by-product?product=' + ingredient.name)
+        .then((resp) => resp.json())
+        .then((json) => fillSelect(json))
 }
 
 /**
@@ -286,6 +330,5 @@ function fillResourceNames(list) {
     }
 }
 
-// main begin
 const width = 6
 const height = 3

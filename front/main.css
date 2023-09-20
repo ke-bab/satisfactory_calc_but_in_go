@@ -63,7 +63,7 @@ body {
     width: 4em;
 }
 
-#selected-control {
+.selected-node-control {
     height: 20%;
     border-radius: 0.4em;
     background-color: rgb(255 255 255 / 0.2);
@@ -74,7 +74,9 @@ body {
     position: absolute;
     width: 10em;
     height: 5em;
-    background-color: #c2c2c2;
+    border-radius: 0.4em;
+    background-color: rgb(255 255 255 / 0.2);
+    backdrop-filter: blur(5px);
     font-family: "Courier New", Courier, monospace;
     display: flex;
     flex-direction: row;
