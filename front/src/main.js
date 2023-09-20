@@ -76,6 +76,10 @@ class RecipeNode {
     }
 }
 
+function render() {
+    let root = document.querySelector('#root-control')
+    renderRecursive(root.recipeNode, new Position())
+}
 
 /**
  * @param {RecipeNode} recipeNode
@@ -83,7 +87,7 @@ class RecipeNode {
  * @param deepLevel
  */
 function renderRecursive(recipeNode, pos, deepLevel = 0) {
-    createCell(pos.x, pos.y, recipeNode, deepLevel)
+    createOrUpdateCell(pos.x, pos.y, recipeNode, deepLevel)
     deepLevel++
     for (let i = 0; i < recipeNode.childNodes.length; i++) {
         let y = pos.y + i
@@ -104,48 +108,56 @@ function renderRecursive(recipeNode, pos, deepLevel = 0) {
  * @param {?RecipeNode} recipeNode
  * @param {number} deepLevel
  */
-function createCell(x, y, recipeNode, deepLevel) {
+function createOrUpdateCell(x, y, recipeNode, deepLevel) {
     let gridDiv = document.querySelector("#grid")
-    let cell = document.createElement("div")
-    cell.recipeNode = recipeNode
-    recipeNode.setHTMLElement(cell)
+    if (recipeNode.element !== null) {
+        // update only
+        recipeNode.element.style.left = x * width + (deepLevel) + "em"
+        recipeNode.element.style.top = y * height + "em"
+    } else {
+        // create new
+        let cell = document.createElement("div")
+        cell.recipeNode = recipeNode
+        recipeNode.setHTMLElement(cell)
 
-    cell.classList.add("cell")
-    cell.style.left = x * width + (deepLevel) + "em"
-    cell.style.top = y * height + "em"
+        cell.classList.add("cell")
+        cell.style.left = x * width + (deepLevel) + "em"
+        cell.style.top = y * height + "em"
 
-    let leftDiv = document.createElement('div')
-    leftDiv.classList.add("left")
-    let rightDiv = document.createElement('div')
-    rightDiv.classList.add("right")
+        let leftDiv = document.createElement('div')
+        leftDiv.classList.add("left")
+        let rightDiv = document.createElement('div')
+        rightDiv.classList.add("right")
 
-    cell.appendChild(leftDiv)
-    cell.appendChild(rightDiv)
+        cell.appendChild(leftDiv)
+        cell.appendChild(rightDiv)
 
-    createIngredientDivs(rightDiv, recipeNode)
+        createIngredientDivs(rightDiv, recipeNode)
 
-
-
-    let factoryImage = document.createElement('img')
-    factoryImage.src = '/static/images/Assembler.png'
-    leftDiv.appendChild(factoryImage)
-    let factoryCount = document.createElement('div')
-    factoryCount.innerHTML = 'x' + recipeNode.multiplier
-    leftDiv.appendChild(factoryCount)
+        let factoryImage = document.createElement('img')
+        factoryImage.src = '/static/images/Assembler.png'
+        leftDiv.appendChild(factoryImage)
+        let factoryCount = document.createElement('div')
+        factoryCount.innerHTML = 'x' + recipeNode.multiplier
+        leftDiv.appendChild(factoryCount)
 
 
-    gridDiv.appendChild(cell)
-    let nodeControl = document.createElement('div')
-    nodeControl.classList.add('selected-node-control')
-    nodeControl.style.display = 'none'
-    cell.nodeControl = nodeControl
-    let leftPanel = document.querySelector('#left-panel')
-    leftPanel.appendChild(nodeControl)
-    recipeNode.recipe.ingredients.forEach((ingredient) => {
-        createIngredientRecipeSelector(ingredient, nodeControl)
-    })
-    registerCellEvent()
+        gridDiv.appendChild(cell)
+        let nodeControl = document.createElement('div')
+        nodeControl.classList.add('selected-node-control')
+        nodeControl.style.display = 'none'
+        cell.nodeControl = nodeControl
+        nodeControl.cell = cell
+        let leftPanel = document.querySelector('#left-panel')
+        leftPanel.appendChild(nodeControl)
+        recipeNode.recipe.ingredients.forEach((ingredient) => {
+            createIngredientRecipeSelector(ingredient, nodeControl)
+        })
+        registerCellEvent()
+    }
 }
+
+
 
 /**
  * @param {HTMLElement} rightDiv
@@ -206,8 +218,9 @@ window.onload = (event) => {
     recipe_select.addEventListener('change', (event) => {
         let recipe = event.target.options[event.target.selectedIndex].recipe
         fillAmount(recipe)
-        let ironIngot = new RecipeNode(recipe)
-        renderRecursive(ironIngot, new Position())
+        let root = document.querySelector('#root-control')
+        root.recipeNode = new RecipeNode(recipe)
+        render()
     })
 };
 
@@ -235,6 +248,12 @@ function createIngredientRecipeSelector(ingredient, nodeControl) {
     let ingredientDiv = document.createElement('div')
     let image = document.createElement('img')
     let select = document.createElement('select')
+    select.addEventListener('change', (event) => {
+        let recipeNode = nodeControl.cell.recipeNode
+        let newNode = new RecipeNode(event.target.options[event.target.selectedIndex].recipe)
+        recipeNode.addIngredientRecipe(newNode)
+        render()
+    })
     let emptyOption = document.createElement('option')
     emptyOption.value = ''
     emptyOption.innerHTML = 'no recipe'
@@ -247,6 +266,7 @@ function createIngredientRecipeSelector(ingredient, nodeControl) {
         recipes.forEach((recipe) => {
             let newOpt = document.createElement('option')
             newOpt.value = recipe.name
+            newOpt.recipe = recipe
             newOpt.innerHTML = recipe.displayName
             select.appendChild(newOpt)
         })
@@ -330,5 +350,5 @@ function fillResourceNames(list) {
     }
 }
 
-const width = 6
-const height = 3
+const width = 10
+const height = 5
