@@ -10,15 +10,15 @@ class Position {
     }
 }
 
-class Product {
-    name = ''
-    amount = 0
-}
-
-class Ingredient {
-    name = ''
-    amount = 0
-    recipeConnected = false
+/**
+ * @param {RecipeNode} recipeNode
+ */
+function removeRecipeNodesDivsRecursive(recipeNode) {
+    recipeNode.childNodes.forEach((childNode) => {
+        removeRecipeNodesDivsRecursive(childNode)
+    })
+    recipeNode.cell.nodeControl.remove()
+    recipeNode.cell.remove()
 }
 
 class RecipeNode {
@@ -27,10 +27,11 @@ class RecipeNode {
     /** @type {number} */
     multiplier= 1.0
     /** @type {?HTMLElement} */
-    element = null
+    cell = null
     size = 1
     /** @type {?RecipeNode} */
     parentNode = null
+    mainProduct = ''
     /** @type {RecipeNode[]} */
     childNodes = []
 
@@ -41,14 +42,23 @@ class RecipeNode {
         this.recipe = recipe;
     }
 
-    removeIngredientRecipe() {
-
+    /**
+     * @param {RecipeNode} recipeNode
+     */
+    removeRecipeByProduct(recipeNode) {
+        removeRecipeNodesDivsRecursive(recipeNode)
+        let index = this.childNodes.indexOf(recipeNode)
+        this.childNodes.splice(index,1)
     }
 
     /**
      * @param {RecipeNode} newRecipe
      */
     addIngredientRecipe(newRecipe) {
+        let foundNode = this.childNodes.find((recipeNode) => recipeNode.mainProduct === newRecipe.mainProduct)
+        if (foundNode !== undefined) {
+            this.removeRecipeByProduct(foundNode)
+        }
         newRecipe.parentNode = this
         this.childNodes.push(newRecipe)
         this.updateSizeRecursive()
@@ -69,10 +79,19 @@ class RecipeNode {
     }
 
     /**
-     * @param {HTMLElement} element
+     * @param {HTMLElement} cell
      */
-    setHTMLElement(element) {
-        this.element = element
+    setCell(cell) {
+        this.cell = cell
+    }
+
+    /**
+     * @param {string} name
+     * @return {boolean}
+     */
+    hasConnectedRecipeByIngredient(name) {
+        let found = this.childNodes.find((node) => node.mainProduct === name)
+        return found !== undefined;
     }
 }
 
@@ -110,15 +129,15 @@ function renderRecursive(recipeNode, pos, deepLevel = 0) {
  */
 function createOrUpdateCell(x, y, recipeNode, deepLevel) {
     let gridDiv = document.querySelector("#grid")
-    if (recipeNode.element !== null) {
+    if (recipeNode.cell !== null) {
         // update only
-        recipeNode.element.style.left = x * width + (deepLevel) + "em"
-        recipeNode.element.style.top = y * height + "em"
+        recipeNode.cell.style.left = x * width + (deepLevel) + "em"
+        recipeNode.cell.style.top = y * height + "em"
     } else {
         // create new
         let cell = document.createElement("div")
         cell.recipeNode = recipeNode
-        recipeNode.setHTMLElement(cell)
+        recipeNode.setCell(cell)
 
         cell.classList.add("cell")
         cell.style.left = x * width + (deepLevel) + "em"
@@ -199,7 +218,8 @@ window.onload = (event) => {
         .then((response) => response.json())
         .then((json) => {
             fillResourceNames(json)
-        });
+        })
+        .catch(()=> {})
     let wanted_resource_input = document.querySelector('#wanted_resource_input')
 
     wanted_resource_input.addEventListener('change', (e) => {
@@ -220,6 +240,7 @@ window.onload = (event) => {
         fillAmount(recipe)
         let root = document.querySelector('#root-control')
         root.recipeNode = new RecipeNode(recipe)
+        root.recipeNode.mainProduct = recipe_select.value
         render()
     })
 };
@@ -251,7 +272,12 @@ function createIngredientRecipeSelector(ingredient, nodeControl) {
     select.addEventListener('change', (event) => {
         let recipeNode = nodeControl.cell.recipeNode
         let newNode = new RecipeNode(event.target.options[event.target.selectedIndex].recipe)
+        newNode.mainProduct = ingredient.name
         recipeNode.addIngredientRecipe(newNode)
+        let total = document.querySelector('#total')
+        total.style.display = 'block'
+        // subtract ingreds from parent from total
+        // add product from new recipe to total
         render()
     })
     let emptyOption = document.createElement('option')
@@ -274,6 +300,7 @@ function createIngredientRecipeSelector(ingredient, nodeControl) {
     fetch('/find-recipe-by-product?product=' + ingredient.name)
         .then((resp) => resp.json())
         .then((json) => fillSelect(json))
+        .catch(() => {})
 }
 
 /**
@@ -316,20 +343,23 @@ class Recipe {
 }
 
 /**
- * @param {Recipe[]} list
+ * @param {Recipe[]} recipes
  */
-function fillRecipeOptions(list) {
+function fillRecipeOptions(recipes) {
     let recipe_select = document.querySelector('#recipe_select')
     recipe_select.innerHTML = ''
+    let emptyOpt = document.createElement('option')
+    emptyOpt.value = ''
+    emptyOpt.innerHTML = 'no recipe'
+    recipe_select.appendChild(emptyOpt)
     recipe_select.style.display = 'block'
-    list.forEach((recipe, index) => {
+    recipes.forEach((recipe, index) => {
         let opt = document.createElement("option")
         opt.value = recipe.name
         opt.innerHTML = recipe.displayName
         opt.recipe = recipe
         recipe_select.appendChild(opt)
     })
-    recipe_select.dispatchEvent(new Event("change"))
 }
 
 class Option {
@@ -348,6 +378,11 @@ function fillResourceNames(list) {
         newOption.innerHTML = list[i].displayName
         datalist.appendChild(newOption)
     }
+}
+
+class TotalNeeds {
+    /** @type {Map<string, number>} */
+    resources= new Map()
 }
 
 const width = 10

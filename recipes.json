@@ -1658,7 +1658,7 @@
       "FullName": "BlueprintGeneratedClass /Game/FactoryGame/Recipes/RawResources/Recipe_OreIron.Recipe_OreIron_C",
       "mDisplayName": "Iron Ore",
       "mIngredients": "((ItemClass=BlueprintGeneratedClass'\"/Game/FactoryGame/Resource/RawResources/OreIron/Desc_OreIron.Desc_OreIron_C\"',Amount=1))",
-      "mProduct": "((ItemClass=BlueprintGeneratedClass'\"/Game/FactoryGame/Resource/RawResources/OreIron/Desc_OreIron.Desc_OreIron_C\"',Amount=1))",
+        "mProduct": "((ItemClass=BlueprintGeneratedClass'\"/Game/FactoryGame/Resource/RawResources/OreIron/Desc_OreIron.Desc_OreIron_C\"',Amount=1))",
       "mManufacturingMenuPriority": "0.000000",
       "mManufactoringDuration": "2.000000",
       "mManualManufacturingMultiplier": "1.000000",

@@ -30,6 +30,9 @@ func ExtractData(filepath string) ([]Recipe, error) {
 		if err != nil {
 			return nil, err
 		}
+		if productIsPrimitive(products) {
+			continue
+		}
 		durationF32, err := strconv.ParseFloat(recipe.ManufactoringDuration, 32)
 		duration := int(durationF32)
 		if err != nil {
@@ -173,4 +176,41 @@ func parseProducedIn(str string) string {
 
 func shouldBeExcluded(str string) bool {
 	return strings.Contains(str, "BP_BuildGun_C") || strings.Contains(str, "BP_WorkshopComponent_C") || str == ""
+}
+
+func productIsPrimitive(products []ResourceDescription) bool {
+	for _, p := range products {
+		if containsString(getPrimitiveProducts(), p.Name) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func containsString(list []string, str string) bool {
+	for _, name := range list {
+		if str == name {
+			return true
+		}
+	}
+
+	return false
+}
+
+func getPrimitiveProducts() []string {
+	return []string{
+		"OreIron",
+		"OreCopper",
+		"OreGold",
+		"OreBauxite",
+		"OreUranium",
+		"Coal",
+		"Sulfur",
+		"RawQuartz",
+		"Stone",
+		"LiquidOil",
+		"NitrogenGas",
+		"Water",
+	}
 }
