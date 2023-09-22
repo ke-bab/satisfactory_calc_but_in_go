@@ -74,11 +74,6 @@ export class Render {
 }
 
 export class Position {
-    /** @type {number} */
-    x
-    /** @type {number} */
-    y
-
     constructor(x = 0, y = 0) {
         this.x = x;
         this.y = y;
@@ -134,10 +129,7 @@ export function createIngredientRecipeSelector(ingredient, nodeControl) {
         let newNode = new RecipeNode(event.target.options[event.target.selectedIndex].recipe)
         newNode.mainProduct = ingredient.name
         recipeNode.addIngredientRecipe(newNode)
-
         totalNeeds.add(ingredient.name, ingredient.amount)
-
-        render()
     })
     let emptyOption = document.createElement('option')
     emptyOption.value = ''
