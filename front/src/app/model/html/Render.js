@@ -202,16 +202,3 @@ export class Option {
     displayName
 }
 
-
-/**
- * @param {Option[]} list
- */
-export function fillResourceNames(list) {
-    let datalist = document.querySelector('#wanted_resource_list')
-    for (let i = 0; i < list.length; i++) {
-        let newOption = document.createElement("option")
-        newOption.value = list[i].name
-        newOption.innerHTML = list[i].displayName
-        datalist.appendChild(newOption)
-    }
-}

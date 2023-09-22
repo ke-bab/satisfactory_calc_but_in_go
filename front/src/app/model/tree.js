@@ -1,4 +1,4 @@
-import {removeRecipeNodesDivsRecursive, Render} from "./html/render";
+import {removeRecipeNodesDivsRecursive, Render} from "./html/Render";
 import {EventBus} from "../bus";
 
 export class Tree {
@@ -104,40 +104,6 @@ export class RecipeNode {
         let found = this.childNodes.find((node) => node.mainProduct === name)
         return found !== undefined;
     }
-}
-
-
-export function clearTree() {
-    document.querySelector('#recipe_select').style.display = 'none'
-    document.querySelector('#amount').style.display = 'none'
-    document.querySelector('#grid').innerHTML = ''
-    document.querySelector('#root-control').recipeNode = undefined
-    document.querySelectorAll('.cell').forEach((element) => element.remove())
-    document.querySelectorAll('.selected-node-control').forEach((element) => element.remove())
-}
-
-
-/**
- * @param {Recipe} recipe
- */
-export function fillAmount(recipe) {
-    let amountEl = document.querySelector('#amount')
-    amountEl.style.display = 'block'
-    // add img src
-    let amount_input = document.querySelector("#amount_input")
-    let wanted_input = document.querySelector('#wanted_resource_input')
-    let resource = getProduct(wanted_input.value, recipe.products)
-    amount_input.value = 60 / recipe.manufactoringDuration * resource.amount
-}
-
-
-/**
- * @param {string} name
- * @param {Resource[]} res
- * @return {?Resource}
- */
-export function getProduct(name, res) {
-    return res.find((r) => r.name === name, null)
 }
 
 
