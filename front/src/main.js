@@ -1,3 +1,5 @@
+
+
 class Position {
     /** @type {number} */
     x

@@ -72,7 +72,7 @@ func webServer(recipes []rd.Recipe) {
 	handleErr(err)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		mainHtml, _ := os.ReadFile("./front/index.html")
+		mainHtml, _ := os.ReadFile("./front/dist/index.html")
 		_, err := w.Write(mainHtml)
 		if err != nil {
 			w.WriteHeader(400)
@@ -109,7 +109,7 @@ func webServer(recipes []rd.Recipe) {
 			return
 		}
 	})
-	fs := http.FileServer(http.Dir("./front"))
+	fs := http.FileServer(http.Dir("./front/dist"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 
 	err = http.ListenAndServe(":3333", nil)
