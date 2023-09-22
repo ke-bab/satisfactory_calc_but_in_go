@@ -1,18 +1,19 @@
+import {EventBus} from "../../../bus";
+import {Amount} from "./Amount";
+
 export class RecipeSelect {
     /** @type {HTMLSelectElement} */
     selector = document.querySelector('#recipe_select')
-    /** @type {?Amount} */
-    amount = null
-    init() {
+    amount = new Amount()
+    listenChanges() {
         this.selector.addEventListener('change', (event) => {
             let recipe = this.selector.options[this.selector.selectedIndex].recipe
             let amountEl = document.querySelector('#amount')
             amountEl.style.display = 'block'
-            // add img src
-            let amount_input = document.querySelector("#amount_input")
             let wanted_input = document.querySelector('#wanted_resource_input')
             let resource = recipe.products.find((r) => r.name === wanted_input.value, null)
             this.amount.setAmount(60 / recipe.manufactoringDuration * resource.amount)
+            EventBus.publish('root-recipe-selected', recipe)
         })
     }
 }

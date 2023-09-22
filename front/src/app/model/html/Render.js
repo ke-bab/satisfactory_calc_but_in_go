@@ -1,4 +1,5 @@
-import {height, RecipeNode, totalNeeds, width} from "../tree";
+import {height, width} from "../Tree";
+import {RecipeNode} from "../RecipeNode";
 
 export class Render {
     /** @type {?RecipeNode} */
@@ -129,7 +130,7 @@ export function createIngredientRecipeSelector(ingredient, nodeControl) {
         let newNode = new RecipeNode(event.target.options[event.target.selectedIndex].recipe)
         newNode.mainProduct = ingredient.name
         recipeNode.addIngredientRecipe(newNode)
-        totalNeeds.add(ingredient.name, ingredient.amount)
+        // add to total
     })
     let emptyOption = document.createElement('option')
     emptyOption.value = ''

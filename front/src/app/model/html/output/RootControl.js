@@ -6,12 +6,10 @@ export class RootControl {
     element = document.querySelector('#root-control')
     partInput = new PartInput()
     recipeSelect = new RecipeSelect()
-    amount = new Amount()
 
     init() {
         this.partInput.init()
-        this.recipeSelect.init()
-        this.recipeSelect.amount = this.amount
+        this.recipeSelect.listenChanges()
         window.addEventListener('load', () => {
             fetch("/resource-name-list")
                 .then((response) => response.json())
