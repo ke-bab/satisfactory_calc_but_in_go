@@ -1,5 +1,5 @@
-import {height, width} from "../Tree";
-import {RecipeNode} from "../RecipeNode";
+import {height, width} from "../../Tree/Tree";
+import {RecipeNode} from "../../Tree/RecipeNode";
 
 export class Render {
     /** @type {?RecipeNode} */
@@ -174,27 +174,6 @@ export function removeRecipeNodesDivsRecursive(recipeNode) {
     })
     recipeNode.cell.nodeControl.remove()
     recipeNode.cell.remove()
-}
-
-
-/**
- * @param {Recipe[]} recipes
- */
-export function fillRecipeOptions(recipes) {
-    let recipe_select = document.querySelector('#recipe_select')
-    recipe_select.innerHTML = ''
-    let emptyOpt = document.createElement('option')
-    emptyOpt.value = ''
-    emptyOpt.innerHTML = 'no recipe'
-    recipe_select.appendChild(emptyOpt)
-    recipe_select.style.display = 'block'
-    recipes.forEach((recipe, index) => {
-        let opt = document.createElement("option")
-        opt.value = recipe.name
-        opt.innerHTML = recipe.displayName
-        opt.recipe = recipe
-        recipe_select.appendChild(opt)
-    })
 }
 
 

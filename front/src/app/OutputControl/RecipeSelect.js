@@ -1,8 +1,14 @@
 import {EventBus} from "../bus";
 import {partClear, partSelected} from "./PartSearch";
-import {Recipe} from "./Recipe";
+import {Recipe} from "../GameData/Recipe";
+
+export const events = {
+    recipeSelected : 'recipe-selected'
+}
 
 export class RecipeSelect {
+    /** @type {?Recipe}*/
+    selectedRecipe = null
     recipes = []
     recipesSelect = document.querySelector('#recipe_select')
     constructor() {
@@ -13,6 +19,10 @@ export class RecipeSelect {
         EventBus.subscribe(partClear, () => {
             this.recipes = []
             this.updateView()
+        })
+        this.recipesSelect.addEventListener('change', (event) => {
+            this.selectedRecipe = this.recipesSelect.options[this.recipesSelect.selectedIndex].recipe
+            EventBus.publish(events.recipeSelected, this.selectedRecipe)
         })
     }
 

@@ -1,6 +1,6 @@
 import {EventBus} from "../bus";
-import {removeRecipeNodesDivsRecursive} from "./html/Render";
-import {Recipe} from "./Recipe";
+import {removeRecipeNodesDivsRecursive} from "../model/html/Render";
+import {Recipe} from "../GameData/Recipe";
 
 export class RecipeNode {
     /** @type {Recipe} */

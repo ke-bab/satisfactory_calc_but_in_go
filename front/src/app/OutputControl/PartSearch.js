@@ -1,5 +1,5 @@
 import {EventBus} from "../bus";
-import {Recipe} from "./Recipe";
+import {Recipe} from "../GameData/Recipe";
 
 export const partSelected = 'part-selected'
 export const partClear = 'part-clear'

@@ -6,7 +6,7 @@ export class OutputControl {
     partSearch = new PartSearch()
     recipe = new RecipeSelect()
     amountInput = new AmountInput()
-    init() {
-
+    constructor() {
+        this.amountInput.selectedPart = this.partSearch.search
     }
 }

@@ -1,7 +1,7 @@
-import {OutputControl} from "./model/OutputControl";
-import {GameData} from "./model/GameData";
+import {OutputControl} from "./OutputControl/OutputControl";
+import {GameData} from "./GameData/GameData";
 import {EventBus} from "./bus";
-import {partSelected} from "./model/PartSearch";
+import {partSelected} from "./OutputControl/PartSearch";
 
 export class App {
     // render = new Render()
