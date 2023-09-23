@@ -18,6 +18,9 @@ export class RecipeNode {
     /** @type {RecipeNode[]} */
     childNodes = []
 
+    /** @type {} */
+    ingredients = []
+
     /**
      * @param {Recipe} recipe
      */

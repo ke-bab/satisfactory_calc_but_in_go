@@ -1,5 +1,6 @@
 export class EventBus {
     static events = []
+
     static publish(name, ...args) {
         const callbackList = this.events[name];
 
