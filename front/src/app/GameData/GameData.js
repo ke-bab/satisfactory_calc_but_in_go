@@ -1,4 +1,4 @@
-import {Option} from "../model/html/Render";
+import {Option} from "./Option";
 
 export class GameData {
     /** @type {Option[]}*/

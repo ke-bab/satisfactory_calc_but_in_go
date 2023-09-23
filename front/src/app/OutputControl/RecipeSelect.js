@@ -3,7 +3,7 @@ import {events as partSearchEvents} from "./PartSearch";
 import {Recipe} from "../GameData/Recipe";
 
 export const events = {
-    recipeSelected : 'recipe-selected'
+    recipeChanged : 'recipe-changed'
 }
 
 export class RecipeSelect {
@@ -22,7 +22,7 @@ export class RecipeSelect {
         })
         this.recipesSelect.addEventListener('change', (event) => {
             this.selectedRecipe = this.recipesSelect.options[this.recipesSelect.selectedIndex].recipe
-            EventBus.publish(events.recipeSelected, this.selectedRecipe)
+            EventBus.publish(events.recipeChanged, this.selectedRecipe)
         })
     }
 

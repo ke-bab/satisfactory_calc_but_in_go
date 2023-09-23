@@ -12,7 +12,7 @@ export class AmountInput {
     amount = 0
 
     constructor() {
-        EventBus.subscribe(recipeSelectEvents.recipeSelected, (recipe) => {
+        EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => {
             this.setAmountByRecipe(recipe)
         })
         this.amountInput.addEventListener('change', () => {
