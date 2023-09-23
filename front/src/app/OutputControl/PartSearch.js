@@ -1,8 +1,8 @@
 import {EventBus} from "../bus";
-import {Recipe} from "../GameData/Recipe";
 
-export const partSelected = 'part-selected'
-export const partClear = 'part-clear'
+export const events = {
+    partSelected: 'part-selected'
+}
 
 export class PartSearch {
     search = ''
@@ -15,17 +15,7 @@ export class PartSearch {
     registerOnChange() {
         this.searchInput.addEventListener('change', (event) => {
             this.search = this.searchInput.value
-            if (this.search === '') {
-                EventBus.publish(partClear)
-            } else {
-                fetch('/find-recipe-by-product?product=' + this.search)
-                    .then((response) => response.json())
-                    .then((recipeList) => {
-                        /** @type {Recipe[]} recipeList*/
-                        EventBus.publish(partSelected, recipeList)
-                    })
-                    .catch(error => EventBus.publish(partClear))
-            }
+            EventBus.publish(events.partSelected, this.search)
         })
     }
 }

@@ -1,5 +1,5 @@
 import {EventBus} from "../bus";
-import {partClear, partSelected} from "./PartSearch";
+import {events as partSearchEvents} from "./PartSearch";
 import {Recipe} from "../GameData/Recipe";
 
 export const events = {
@@ -12,13 +12,13 @@ export class RecipeSelect {
     recipes = []
     recipesSelect = document.querySelector('#recipe_select')
     constructor() {
-        EventBus.subscribe(partSelected, (recipes) => {
-            this.recipes = recipes
-            this.updateView()
-        })
-        EventBus.subscribe(partClear, () => {
-            this.recipes = []
-            this.updateView()
+        EventBus.subscribe(partSearchEvents.partSelected, (part) => {
+            if (part === '') {
+                this.hide()
+                this.drop()
+            } else {
+                this.loadRecipes(part)
+            }
         })
         this.recipesSelect.addEventListener('change', (event) => {
             this.selectedRecipe = this.recipesSelect.options[this.recipesSelect.selectedIndex].recipe
@@ -26,11 +26,36 @@ export class RecipeSelect {
         })
     }
 
+    drop() {
+        this.recipes = []
+        this.recipesSelect.innerHTML = ''
+    }
+
+    hide() {
+        this.recipesSelect.style.display = 'none'
+    }
+
+    /**
+     * @param {string} part
+     */
+    loadRecipes(part) {
+        fetch('/find-recipe-by-product?product=' + part)
+            .then((response) => response.json())
+            .then((recipeList) => {
+                /** @type {Recipe[]} recipeList*/
+                this.setRecipes(recipeList)
+            })
+            .catch(error => {})
+    }
+
+    setRecipes(recipes) {
+        this.recipes = recipes
+        this.updateView()
+    }
+
     updateView() {
         this.recipesSelect.innerHTML = ''
-        if (this.recipes.length === 0) {
-            this.recipesSelect.style.display = 'none'
-        } else {
+        if (this.recipes.length > 0) {
             this.recipesSelect.style.display = 'block'
             let emptyOpt = document.createElement('option')
             emptyOpt.value = ''
