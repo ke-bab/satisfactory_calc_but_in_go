@@ -43,12 +43,26 @@ export class RecipeSelect {
             .then((response) => response.json())
             .then((recipeList) => {
                 /** @type {Recipe[]} recipeList*/
-                this.setRecipes(recipeList)
+                let recipes = this.convertToListOfRecipes(recipeList)
+                this.setRecipes(recipes)
             })
             .catch(error => {
                 this.hide()
                 this.drop()
             })
+    }
+
+    /**
+     * @param {object[]} objects
+     */
+    convertToListOfRecipes(objects) {
+        let list = []
+        objects.forEach((obj) => {
+            const recipe = Object.assign(new Recipe(), obj)
+            list.push(recipe)
+        })
+
+        return list
     }
 
     setRecipes(recipes) {

@@ -5,24 +5,31 @@ export class NodeControl {
     constructor(recipeNode) {
         this.recipeNode = recipeNode
     }
+
+    drop() {
+        this.view.drop()
+    }
 }
 
 class View {
+    div = document.createElement('div')
+
     constructor(model) {
         this.model = model
-        let nodeControl = document.createElement('div')
-        nodeControl.classList.add('selected-node-control')
-        nodeControl.style.display = 'none'
-        cell.nodeControl = nodeControl
-        nodeControl.cell = cell
-        let leftPanel = document.querySelector('#left-panel')
-        leftPanel.appendChild(nodeControl)
 
-        this.model.recipe.ingredients.forEach((ingredient) => {
-            this.createIngredientRecipeSelector(ingredient, nodeControl)
-        })
+        this.div.classList.add('selected-node-control')
+        this.div.style.display = 'none'
+        let leftPanel = document.querySelector('#left-panel')
+        leftPanel.appendChild(this.div)
+
+        // this.model.recipe.ingredients.forEach((ingredient) => {
+        //     this.createIngredientRecipeSelector(ingredient, nodeControl)
+        // })
     }
 
+    drop() {
+        this.div.remove()
+    }
 
 
     /**

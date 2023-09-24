@@ -7,6 +7,7 @@ import {NodeControl} from "./NodeControl/NodeControl";
 export const events = {
     nodeCreated: 'node-created',
     nodeHtmlCreated: 'node-html-created',
+    nodeDropped: 'node-dropped',
 }
 
 export class RecipeNode {
@@ -31,21 +32,47 @@ export class RecipeNode {
         EventBus.publish(events.nodeCreated, this)
     }
 
-    drop() {
+    /**
+     * @param {number} left
+     * @param {number} top
+     */
+    setPos(left, top) {
+        this.view.setPos(left, top)
+    }
+
+    drop(sendEvent = true) {
+        this.nodeControl.drop()
         this.view.drop()
+        // drop children recursively
+        this.ingredients.forEach((ingredient) => {
+            if (ingredient.connectedRecipeNode instanceof RecipeNode) {
+                ingredient.connectedRecipeNode.drop(false)
+            }
+        })
+        if (sendEvent) {
+            EventBus.publish(events.nodeDropped)
+        }
+    }
+
+    /**
+     * @return {Ingredient[]}
+     */
+    getIngredientsWithConnectedNodes() {
+        return this.ingredients.filter((ingredient) => ingredient.connectedRecipeNode instanceof RecipeNode, [])
     }
 
     updateSizeRecursive() {
         this.size = 0
-        if (this.childNodes.length === 0) {
+        let ingredients = this.getIngredientsWithConnectedNodes()
+        if (ingredients.length === 0) {
             this.size = 1
         } else {
-            for (let i = 0; i < this.childNodes.length; i++) {
-                this.size += this.childNodes[i].size
+            for (let i = 0; i < ingredients.length; i++) {
+                this.size += ingredients[i].connectedRecipeNode.size
             }
         }
-        if (this.parentNode !== null) {
-            this.parentNode.updateSizeRecursive()
+        if (this.parentIngredient !== null) {
+            this.parentIngredient.parentRecipeNode.updateSizeRecursive()
         }
     }
 }
@@ -140,5 +167,14 @@ class View {
             ingredientDiv.appendChild(countDiv)
             rightDiv.appendChild(ingredientDiv)
         })
+    }
+
+    /**
+     * @param {number} left
+     * @param {number} top
+     */
+    setPos(left, top) {
+        this.divNode.style.left = left + "em"
+        this.divNode.style.top = top + "em"
     }
 }
