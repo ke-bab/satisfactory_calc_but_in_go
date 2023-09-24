@@ -12,7 +12,7 @@ export class RecipeSelect {
     recipes = []
     recipesSelect = document.querySelector('#recipe_select')
     constructor() {
-        EventBus.subscribe(partSearchEvents.partSelected, (part) => {
+        EventBus.subscribe(partSearchEvents.partChanged, (part) => {
             if (part === '') {
                 this.hide()
                 this.drop()
@@ -45,7 +45,10 @@ export class RecipeSelect {
                 /** @type {Recipe[]} recipeList*/
                 this.setRecipes(recipeList)
             })
-            .catch(error => {})
+            .catch(error => {
+                this.hide()
+                this.drop()
+            })
     }
 
     setRecipes(recipes) {
@@ -60,6 +63,7 @@ export class RecipeSelect {
             let emptyOpt = document.createElement('option')
             emptyOpt.value = ''
             emptyOpt.innerHTML = 'no recipe'
+            emptyOpt.recipe = null
             this.recipesSelect.appendChild(emptyOpt)
             this.recipes.forEach((recipe, index) => {
                 let opt = document.createElement("option")

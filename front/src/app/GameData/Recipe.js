@@ -1,9 +1,11 @@
+import {Part} from "./Part";
+
 export class Recipe {
     name = ''
     displayName = ''
-    /** @type {Resource[]} */
+    /** @type {Part[]} */
     ingredients = []
-    /** @type {Resource[]} */
+    /** @type {Part[]} */
     products = []
     manufactoringDuration = 1
     producedIn = ''

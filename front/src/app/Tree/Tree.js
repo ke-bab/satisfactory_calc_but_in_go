@@ -1,18 +1,18 @@
 import {RecipeNode} from "./Node/RecipeNode";
 import {EventBus} from "../bus";
 import {events as recipeSelectEvents} from "../OutputControl/RecipeSelect";
+import {events as partSearchEvents} from "../OutputControl/PartSearch";
 import {Recipe} from "../GameData/Recipe";
-import {Position} from "../model/html/Render";
+import {Position} from "./Node/Position";
 
 export class Tree {
     /** @type ?RecipeNode */
     root = null
+    view = new View(this)
 
     constructor() {
-        EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => {
-            /** @type {?Recipe} recipe */
-            this.changeRoot(recipe)
-        })
+        EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => this.changeRoot(recipe))
+        EventBus.subscribe(partSearchEvents.partChanged, () => this.removeSubTree(this.root))
     }
 
     /**
@@ -25,17 +25,33 @@ export class Tree {
         this.root = new RecipeNode(recipe)
     }
 
-
     /**
      * @param {RecipeNode} startNode
      */
     removeSubTree(startNode) {
+        if (startNode === null) {
+            return
+        }
         startNode.childNodes.forEach((node) => this.removeSubTree(node))
         startNode.removeHtml()
-        this.updatePositions()
+        this.view.updatePositions()
+    }
+}
+
+export const width = 10
+export const height = 5
+
+class View {
+
+    constructor(model) {
+        this.model = model
     }
 
-    updatePositions(recipeNode = this.root, pos = new Position(0, 0), deepLevel = 0) {
+    update() {
+
+    }
+
+    updatePositions(recipeNode = this.model.root, pos = new Position(0, 0), deepLevel = 0) {
         if (recipeNode === null) {
             return
         }
@@ -55,6 +71,3 @@ export class Tree {
         }
     }
 }
-
-export const width = 10
-export const height = 5

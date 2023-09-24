@@ -32,7 +32,6 @@ export class GameData {
     updateView() {
         this.datalistHtml.innerHTML = ''
         for (let i = 0; i < this.parts.length; i++) {
-            console.log('ok')
             let newOption = document.createElement("option")
             newOption.value = this.parts[i].name
             newOption.innerHTML = this.parts[i].displayName

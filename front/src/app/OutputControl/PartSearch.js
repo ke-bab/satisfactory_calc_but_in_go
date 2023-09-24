@@ -1,7 +1,7 @@
 import {EventBus} from "../bus";
 
 export const events = {
-    partSelected: 'part-selected'
+    partChanged: 'part-changed'
 }
 
 export class PartSearch {
@@ -15,7 +15,7 @@ export class PartSearch {
     registerOnChange() {
         this.searchInput.addEventListener('change', (event) => {
             this.search = this.searchInput.value
-            EventBus.publish(events.partSelected, this.search)
+            EventBus.publish(events.partChanged, this.search)
         })
     }
 }

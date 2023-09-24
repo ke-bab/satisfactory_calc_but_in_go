@@ -1,7 +1,7 @@
 import {EventBus} from "../../bus";
-import {registerCellEvent} from "../../model/html/Render";
 import {Recipe} from "../../GameData/Recipe";
 import {Ingredient} from "./Ingredient";
+import {Part} from "../../GameData/Part";
 
 export const events = {
     nodeCreated: 'node-created',
@@ -26,23 +26,17 @@ export class RecipeNode {
 
     /** @type {Ingredient[]} */
     ingredients = []
+    view = new View(this)
 
     /**
      * @param {Recipe} recipe
      */
     constructor(recipe) {
         this.recipe = recipe;
-        this.registerCellEvent()
+        this.view.createCell(this)
         EventBus.publish(events.nodeCreated, this)
     }
 
-    registerCellEvent() {
-        let cells = document.querySelectorAll('.cell')
-        cells.forEach((cell) => cell.addEventListener('click', (event) => {
-            document.querySelectorAll('.selected-node-control').forEach((el) => el.style.display = 'none')
-            event.target.closest('.cell').nodeControl.style.display = 'block'
-        }))
-    }
 
 
     removeHtml() {
@@ -115,11 +109,21 @@ export class RecipeNode {
         return found !== undefined;
     }
 
+
+}
+
+
+class View {
+
+    constructor(model) {
+        this.model = model
+    }
     /**
      * @param {RecipeNode} recipeNode
      * @return HTMLDivElement
      */
     createCell(recipeNode) {
+        console.log("createCell")
         let gridDiv = document.querySelector("#grid")
         let cell = document.createElement("div")
         cell.recipeNode = recipeNode
@@ -155,15 +159,14 @@ export class RecipeNode {
         recipeNode.recipe.ingredients.forEach((ingredient) => {
             this.createIngredientRecipeSelector(ingredient, nodeControl)
         })
-        registerCellEvent()
+        this.registerCellEvent()
         EventBus.publish(events.nodeHtmlCreated, this)
 
         return cell
     }
 
-
     /**
-     * @param {Resource} ingredient
+     * @param {Part} ingredient
      * @param {HTMLElement} nodeControl
      */
     createIngredientRecipeSelector(ingredient, nodeControl) {
@@ -199,6 +202,14 @@ export class RecipeNode {
             .then((json) => fillSelect(json))
             .catch(() => {
             })
+    }
+
+    registerCellEvent() {
+        let cells = document.querySelectorAll('.cell')
+        cells.forEach((cell) => cell.addEventListener('click', (event) => {
+            document.querySelectorAll('.selected-node-control').forEach((el) => el.style.display = 'none')
+            event.target.closest('.cell').nodeControl.style.display = 'block'
+        }))
     }
 
 
