@@ -20,6 +20,7 @@ export class Tree {
      */
     changeRoot(recipe) {
         if (this.root !== null) {
+            this.root.drop()
             this.removeSubTree(this.root)
         }
         this.root = new RecipeNode(recipe)
@@ -33,7 +34,7 @@ export class Tree {
             return
         }
         startNode.childNodes.forEach((node) => this.removeSubTree(node))
-        startNode.removeHtml()
+
         this.view.updatePositions()
     }
 }

@@ -2,6 +2,7 @@ import {EventBus} from "../../bus";
 import {Recipe} from "../../GameData/Recipe";
 import {Ingredient} from "./Ingredient";
 import {Part} from "../../GameData/Part";
+import {NodeControl} from "./NodeControl/NodeControl";
 
 export const events = {
     nodeCreated: 'node-created',
@@ -13,20 +14,13 @@ export class RecipeNode {
     recipe
     /** @type {number} */
     multiplier = 1.0
-    /** @type {HTMLElement} */
-    cell
-    /** @type {HTMLElement} */
-    cellControl
     size = 1
-    /** @type {?RecipeNode} */
-    parentNode = null
-    mainProduct = ''
-    /** @type {RecipeNode[]} */
-    childNodes = []
-
     /** @type {Ingredient[]} */
     ingredients = []
     view = new View(this)
+    nodeControl = new NodeControl(this)
+    /** @type {?Ingredient} */
+    parentIngredient = null
 
     /**
      * @param {Recipe} recipe
@@ -37,46 +31,8 @@ export class RecipeNode {
         EventBus.publish(events.nodeCreated, this)
     }
 
-
-
-    removeHtml() {
-        this.cell.nodeControl.remove()
-        this.cell.remove()
-    }
-
-    /**
-     * @param {RecipeNode} recipeNode
-     */
-    removeRecipeByProduct(recipeNode) {
-        this.removeRecipeNodesDivsRecursive(recipeNode)
-        let index = this.childNodes.indexOf(recipeNode)
-        this.childNodes.splice(index, 1)
-    }
-
-
-    /**
-     * @param {RecipeNode} recipeNode
-     */
-    removeRecipeNodesDivsRecursive(recipeNode) {
-        recipeNode.childNodes.forEach((childNode) => {
-            this.removeRecipeNodesDivsRecursive(childNode)
-        })
-        recipeNode.cell.nodeControl.remove()
-        recipeNode.cell.remove()
-    }
-
-
-    /**
-     * @param {RecipeNode} newRecipe
-     */
-    addIngredientRecipe(newRecipe) {
-        let foundNode = this.childNodes.find((recipeNode) => recipeNode.mainProduct === newRecipe.mainProduct)
-        if (foundNode !== undefined) {
-            this.removeRecipeByProduct(foundNode)
-        }
-        newRecipe.parentNode = this
-        this.childNodes.push(newRecipe)
-        this.updateSizeRecursive()
+    drop() {
+        this.view.drop()
     }
 
     updateSizeRecursive() {
@@ -92,42 +48,29 @@ export class RecipeNode {
             this.parentNode.updateSizeRecursive()
         }
     }
-
-    /**
-     * @param {HTMLElement} cell
-     */
-    setCell(cell) {
-        this.cell = cell
-    }
-
-    /**
-     * @param {string} name
-     * @return {boolean}
-     */
-    hasConnectedRecipeByIngredient(name) {
-        let found = this.childNodes.find((node) => node.mainProduct === name)
-        return found !== undefined;
-    }
-
-
 }
 
 
 class View {
+    divNode = document.createElement("div")
 
     constructor(model) {
         this.model = model
     }
+
+    drop() {
+        this.divNode.remove()
+    }
+
     /**
      * @param {RecipeNode} recipeNode
      * @return HTMLDivElement
      */
     createCell(recipeNode) {
-        console.log("createCell")
         let gridDiv = document.querySelector("#grid")
-        let cell = document.createElement("div")
+        let cell = this.divNode
         cell.recipeNode = recipeNode
-        recipeNode.setCell(cell)
+        recipeNode.cell = cell
 
         cell.classList.add("cell")
 
@@ -149,59 +92,11 @@ class View {
         leftDiv.appendChild(factoryCount)
 
         gridDiv.appendChild(cell)
-        let nodeControl = document.createElement('div')
-        nodeControl.classList.add('selected-node-control')
-        nodeControl.style.display = 'none'
-        cell.nodeControl = nodeControl
-        nodeControl.cell = cell
-        let leftPanel = document.querySelector('#left-panel')
-        leftPanel.appendChild(nodeControl)
-        recipeNode.recipe.ingredients.forEach((ingredient) => {
-            this.createIngredientRecipeSelector(ingredient, nodeControl)
-        })
+
         this.registerCellEvent()
         EventBus.publish(events.nodeHtmlCreated, this)
 
         return cell
-    }
-
-    /**
-     * @param {Part} ingredient
-     * @param {HTMLElement} nodeControl
-     */
-    createIngredientRecipeSelector(ingredient, nodeControl) {
-        let ingredientDiv = document.createElement('div')
-        let image = document.createElement('img')
-        let select = document.createElement('select')
-        select.addEventListener('change', (event) => {
-            let recipeNode = nodeControl.cell.recipeNode
-            let newNode = new RecipeNode(event.target.options[event.target.selectedIndex].recipe)
-            newNode.mainProduct = ingredient.name
-            recipeNode.addIngredientRecipe(newNode)
-            // add to total
-        })
-        let emptyOption = document.createElement('option')
-        emptyOption.value = ''
-        emptyOption.innerHTML = 'no recipe'
-        select.appendChild(emptyOption)
-        nodeControl.appendChild(ingredientDiv)
-        ingredientDiv.appendChild(image)
-        ingredientDiv.appendChild(select)
-        /** @param {Recipe[]} recipes */
-        let fillSelect = (recipes) => {
-            recipes.forEach((recipe) => {
-                let newOpt = document.createElement('option')
-                newOpt.value = recipe.name
-                newOpt.recipe = recipe
-                newOpt.innerHTML = recipe.displayName
-                select.appendChild(newOpt)
-            })
-        }
-        fetch('/find-recipe-by-product?product=' + ingredient.name)
-            .then((resp) => resp.json())
-            .then((json) => fillSelect(json))
-            .catch(() => {
-            })
     }
 
     registerCellEvent() {
