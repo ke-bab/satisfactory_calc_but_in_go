@@ -1,13 +1,13 @@
-import {EventBus} from "../../bus";
+import {EventBus} from "../../Bus";
 import {Recipe} from "../../GameData/Recipe";
 import {Ingredient} from "./Ingredient";
 import {Part} from "../../GameData/Part";
 import {NodeControl} from "./NodeControl/NodeControl";
 
 export const events = {
-    nodeCreated: 'node-created',
-    nodeHtmlCreated: 'node-html-created',
-    nodeDropped: 'node-dropped',
+    created: 'node-created',
+    dropped: 'node-dropped',
+    clicked: 'node-clicked',
 }
 
 export class RecipeNode {
@@ -16,10 +16,11 @@ export class RecipeNode {
     /** @type {number} */
     multiplier = 1.0
     size = 1
+    /** @type {View} */
+    view
     /** @type {Ingredient[]} */
     ingredients = []
-    view = new View(this)
-    nodeControl = new NodeControl(this)
+    nodeControl
     /** @type {?Ingredient} */
     parentIngredient = null
 
@@ -28,8 +29,9 @@ export class RecipeNode {
      */
     constructor(recipe) {
         this.recipe = recipe;
-        this.view.createCell(this)
-        EventBus.publish(events.nodeCreated, this)
+        this.view = new View(this)
+        this.nodeControl = new NodeControl(this)
+        EventBus.publish(events.created, this)
     }
 
     /**
@@ -40,17 +42,35 @@ export class RecipeNode {
         this.view.setPos(left, top)
     }
 
-    drop(sendEvent = true) {
+    dropNodeControl() {
         this.nodeControl.drop()
+        this.nodeControl = null
+    }
+
+    dropView() {
         this.view.drop()
+        this.view = null
+    }
+
+    /**
+     * @param {Ingredient} ingredient
+     */
+    dropChildNode(ingredient) {
+        ingredient.connectedRecipeNode.drop(false)
+        ingredient.connectedRecipeNode = null
+    }
+
+    drop(sendEvent = true) {
+        this.dropNodeControl()
+        this.dropView()
         // drop children recursively
         this.ingredients.forEach((ingredient) => {
             if (ingredient.connectedRecipeNode instanceof RecipeNode) {
-                ingredient.connectedRecipeNode.drop(false)
+                this.dropChildNode(ingredient)
             }
         })
         if (sendEvent) {
-            EventBus.publish(events.nodeDropped)
+            EventBus.publish(events.dropped)
         }
     }
 
@@ -82,70 +102,54 @@ class View {
     divNode = document.createElement("div")
 
     constructor(model) {
-        this.model = model
+        this.node = model
+        this.createCell()
     }
 
     drop() {
         this.divNode.remove()
     }
 
-    /**
-     * @param {RecipeNode} recipeNode
-     * @return HTMLDivElement
-     */
-    createCell(recipeNode) {
+    createCell() {
         let gridDiv = document.querySelector("#grid")
-        let cell = this.divNode
-        cell.recipeNode = recipeNode
-        recipeNode.cell = cell
 
-        cell.classList.add("cell")
+        this.divNode.classList.add("cell")
 
         let leftDiv = document.createElement('div')
         leftDiv.classList.add("left")
         let rightDiv = document.createElement('div')
         rightDiv.classList.add("right")
 
-        cell.appendChild(leftDiv)
-        cell.appendChild(rightDiv)
+        this.divNode.appendChild(leftDiv)
+        this.divNode.appendChild(rightDiv)
 
-        this.createIngredientDivs(rightDiv, recipeNode)
+        this.createIngredientDivs(rightDiv)
 
         let factoryImage = document.createElement('img')
         factoryImage.src = '/static/images/Assembler.png'
         leftDiv.appendChild(factoryImage)
         let factoryCount = document.createElement('div')
-        factoryCount.innerHTML = 'x' + recipeNode.multiplier
+        factoryCount.innerHTML = 'x' + this.node.multiplier
         leftDiv.appendChild(factoryCount)
 
-        gridDiv.appendChild(cell)
+        gridDiv.appendChild(this.divNode)
 
-        this.registerCellEvent()
-        EventBus.publish(events.nodeHtmlCreated, this)
-
-        return cell
+        this.divNode.addEventListener('click', (event) => {
+            console.log('click')
+            EventBus.publish(events.clicked, this.node)
+        })
     }
-
-    registerCellEvent() {
-        let cells = document.querySelectorAll('.cell')
-        cells.forEach((cell) => cell.addEventListener('click', (event) => {
-            document.querySelectorAll('.selected-node-control').forEach((el) => el.style.display = 'none')
-            event.target.closest('.cell').nodeControl.style.display = 'block'
-        }))
-    }
-
 
     /**
      * @param {HTMLElement} rightDiv
-     * @param {RecipeNode} recipeNode
      */
-    createIngredientDivs(rightDiv, recipeNode) {
-        recipeNode.recipe.ingredients.forEach((ingredient) => {
+    createIngredientDivs(rightDiv) {
+        this.node.recipe.ingredients.forEach((ingredient) => {
             let ingredientDiv = document.createElement('div')
             ingredientDiv.classList.add('ingredient')
             let w = 100
             let h = 100
-            let len = recipeNode.recipe.ingredients.length
+            let len = this.node.recipe.ingredients.length
             if (len === 2) {
                 w = 50
             }

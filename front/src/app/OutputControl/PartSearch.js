@@ -1,4 +1,4 @@
-import {EventBus} from "../bus";
+import {EventBus} from "../Bus";
 
 export const events = {
     partChanged: 'part-changed'

@@ -1,5 +1,5 @@
 import {RecipeNode} from "./Node/RecipeNode";
-import {EventBus} from "../bus";
+import {EventBus} from "../Bus";
 import {events as recipeSelectEvents} from "../OutputControl/RecipeSelect";
 import {events as partSearchEvents} from "../OutputControl/PartSearch";
 import {Position} from "./Node/Position";
@@ -14,8 +14,8 @@ export class Tree {
     constructor() {
         EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => this.handleRecipeChanged(recipe))
         EventBus.subscribe(partSearchEvents.partChanged, () => this.handlePartSearchChanged())
-        EventBus.subscribe(nodeEvents.nodeDropped, () => this.handleNodeDropped())
-        EventBus.subscribe(nodeEvents.nodeCreated, () => this.handleNodeCreated())
+        EventBus.subscribe(nodeEvents.dropped, () => this.handleNodeDropped())
+        EventBus.subscribe(nodeEvents.created, () => this.handleNodeCreated())
     }
 
     handleNodeDropped() {
@@ -36,8 +36,6 @@ export class Tree {
             this.root.drop()
             this.setRoot(null)
         }
-        console.log(recipe)
-        console.log(recipe instanceof Recipe)
         if (recipe instanceof Recipe) {
             this.setRoot(new RecipeNode(recipe))
         }

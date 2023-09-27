@@ -1,9 +1,31 @@
+import {EventBus} from "../../../Bus";
+import {events as nodeEvents} from "../RecipeNode";
+
 export class NodeControl {
-    recipeNode
+    node
     view = new View(this)
 
     constructor(recipeNode) {
-        this.recipeNode = recipeNode
+        this.node = recipeNode
+        EventBus.subscribe(nodeEvents.clicked, (node) => {this.handleNodeClick(node)})
+    }
+
+    handleNodeClick(node) {
+        console.log('handle')
+        console.log(node !== this.node)
+        if (node !== this.node) {
+            this.hide()
+        } else {
+            this.show()
+        }
+    }
+
+    hide() {
+        this.view.hide()
+    }
+
+    show() {
+        this.view.show()
     }
 
     drop() {
@@ -16,15 +38,24 @@ class View {
 
     constructor(model) {
         this.model = model
-
         this.div.classList.add('selected-node-control')
-        this.div.style.display = 'none'
+        this.hide()
         let leftPanel = document.querySelector('#left-panel')
         leftPanel.appendChild(this.div)
 
         // this.model.recipe.ingredients.forEach((ingredient) => {
         //     this.createIngredientRecipeSelector(ingredient, nodeControl)
         // })
+    }
+
+    hide() {
+        this.div.classList.remove('shown')
+        this.div.classList.add('hidden')
+    }
+
+    show() {
+        this.div.classList.remove('hidden')
+        this.div.classList.add('shown')
     }
 
     drop() {
