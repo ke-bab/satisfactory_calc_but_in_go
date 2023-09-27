@@ -5,6 +5,7 @@ import {events as partSearchEvents} from "../OutputControl/PartSearch";
 import {Position} from "./Node/Position";
 import {events as nodeEvents} from "./Node/RecipeNode";
 import {Recipe} from "../GameData/Recipe";
+import {events as ingredientEvents} from "./Node/Ingredient";
 
 export class Tree {
     /** @type ?RecipeNode */
@@ -14,8 +15,10 @@ export class Tree {
     constructor() {
         EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => this.handleRecipeChanged(recipe))
         EventBus.subscribe(partSearchEvents.partChanged, () => this.handlePartSearchChanged())
-        EventBus.subscribe(nodeEvents.dropped, () => this.handleNodeDropped())
-        EventBus.subscribe(nodeEvents.created, () => this.handleNodeCreated())
+        // EventBus.subscribe(nodeEvents.dropped, () => this.handleNodeDropped())
+        // EventBus.subscribe(nodeEvents.created, () => this.handleNodeCreated())
+        EventBus.subscribe(ingredientEvents.connectedNodeChanged, () => this.handleNodeCreated())
+
     }
 
     handleNodeDropped() {
@@ -65,6 +68,10 @@ class View {
      * @param {number} deepLevel
      */
     updatePositions(recipeNode = this.model.root, pos = new Position(0, 0), deepLevel = 0) {
+        console.log('updatePositions')
+        // console.log(recipeNode)
+        // console.log(pos)
+        // console.log(deepLevel)
         if (recipeNode === null) {
             return
         }
@@ -72,7 +79,13 @@ class View {
         recipeNode.setPos(pos.x * width + (deepLevel), pos.y * height)
 
         deepLevel++
+
         let ingredients = recipeNode.getIngredientsWithConnectedNodes()
+
+        console.log(ingredients)
+        console.log(ingredients.length)
+        console.log(recipeNode.ingredients)
+        console.log(recipeNode.ingredients.length)
         for (let i = 0; i < ingredients.length; i++) {
             let y = pos.y + i
             if (i > 0) {

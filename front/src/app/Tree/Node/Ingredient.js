@@ -1,6 +1,11 @@
 import {Part} from "../../GameData/Part";
 import {RecipeNode} from "./RecipeNode";
 import {Recipe} from "../../GameData/Recipe";
+import {EventBus} from "../../Bus";
+
+export const events = {
+    connectedNodeChanged: 'connected-node-changed'
+}
 
 export class Ingredient {
     name
@@ -25,5 +30,6 @@ export class Ingredient {
         if (recipe !== null) {
             this.connectedRecipeNode = new RecipeNode(recipe)
         }
+        EventBus.publish(events.connectedNodeChanged)
     }
 }

@@ -22,6 +22,7 @@ export class RecipeSelect {
         })
         this.recipesSelect.addEventListener('change', (event) => {
             this.selectedRecipe = this.recipesSelect.options[this.recipesSelect.selectedIndex].recipe
+
             EventBus.publish(events.recipeChanged, this.selectedRecipe)
         })
     }

@@ -11,7 +11,7 @@ export class NodeControl {
     constructor(recipeNode) {
         this.node = recipeNode
         this.view = new View(this)
-        this.recipeSelectors = recipeNode.recipe.ingredients.map((part) => new RecipeSelect(part, this.view.div))
+        this.recipeSelectors = recipeNode.recipe.ingredients.map((part) => new RecipeSelect(part, this.view.div, this))
         EventBus.subscribe(nodeEvents.clicked, (node) => {this.handleNodeClick(node)})
     }
 

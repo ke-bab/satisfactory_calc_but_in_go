@@ -1,10 +1,7 @@
 import {Part} from '../../../GameData/Part'
 import {Recipe} from "../../../GameData/Recipe";
 import {EventBus} from "../../../Bus";
-
-export const events = {
-    changed: 'ingredient-recipe-changed'
-}
+import {NodeControl} from "./NodeControl";
 
 export class RecipeSelect {
     /**
@@ -19,13 +16,19 @@ export class RecipeSelect {
     recipes = []
     /** @type {?Recipe} */
     selectedRecipe
+    /**
+     * @type {NodeControl}
+     */
+    parent
 
     /**
      * @param {Part} part
      * @param controlDiv
+     * @param {NodeControl} parent
      */
-    constructor(part, controlDiv) {
+    constructor(part, controlDiv, parent) {
         this.part = part
+        this.parent = parent;
         this.view = new View(this, controlDiv)
         this.fillOptions()
         this.listenChanges()
@@ -34,7 +37,7 @@ export class RecipeSelect {
     listenChanges() {
         this.view.select.addEventListener('change', () => {
             this.selectedRecipe = this.recipes.find((recipe) => this.view.select.value = recipe.name, null)
-            EventBus.publish(events.changed, this)
+            this.parent.node.setRecipeForIngredient(this.part, this.selectedRecipe)
         })
     }
 

@@ -35,10 +35,6 @@ export class RecipeNode {
         this.nodeControl = new NodeControl(this)
         this.createIngredients()
         EventBus.publish(events.created, this)
-        EventBus.subscribe(nodeRecipeSelectEvents.changed, (recipeSelect) => {
-            /** @type {RecipeSelect} recipeSelect*/
-            this.setRecipeForIngredient(recipeSelect.part, recipeSelect.selectedRecipe)
-        })
     }
 
     createIngredients() {
@@ -110,7 +106,13 @@ export class RecipeNode {
      * @return {Ingredient[]}
      */
     getIngredientsWithConnectedNodes() {
-        return this.ingredients.filter((ingredient) => ingredient.connectedRecipeNode instanceof RecipeNode, [])
+        let result = []
+        for (let i = 0; i < this.ingredients.length; i++) {
+            if (this.ingredients[i].connectedRecipeNode !== null) {
+                result.push(this.ingredients[i])
+            }
+        }
+        return result
     }
 
     updateSizeRecursive() {
