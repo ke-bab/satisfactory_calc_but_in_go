@@ -3,6 +3,8 @@ import {Recipe} from "../../GameData/Recipe";
 import {Ingredient} from "./Ingredient";
 import {Part} from "../../GameData/Part";
 import {NodeControl} from "./NodeControl/NodeControl";
+import {events as nodeRecipeSelectEvents, RecipeSelect} from "./NodeControl/RecipeSelect";
+
 
 export const events = {
     created: 'node-created',
@@ -31,7 +33,37 @@ export class RecipeNode {
         this.recipe = recipe;
         this.view = new View(this)
         this.nodeControl = new NodeControl(this)
+        this.createIngredients()
         EventBus.publish(events.created, this)
+        EventBus.subscribe(nodeRecipeSelectEvents.changed, (recipeSelect) => {
+            /** @type {RecipeSelect} recipeSelect*/
+            this.setRecipeForIngredient(recipeSelect.part, recipeSelect.selectedRecipe)
+        })
+    }
+
+    createIngredients() {
+        this.recipe.ingredients.forEach((ingredient) => {
+            this.ingredients.push(
+                new Ingredient(ingredient.name, ingredient.amount, this)
+            )
+        })
+    }
+
+    /**
+     *
+     * @param {Part} part
+     * @param {?Recipe} recipe
+     */
+    setRecipeForIngredient(part, recipe) {
+        console.log('setRecipeForIngredient')
+        console.log(this.ingredients)
+        console.log(part)
+        let nodeIngredient = this.ingredients.find((node) => node.name === part.name)
+        if (recipe !== null) {
+            nodeIngredient.setConnectedRecipeNode(recipe)
+        } else {
+            nodeIngredient.setConnectedRecipeNode(null)
+        }
     }
 
     /**
@@ -135,7 +167,6 @@ class View {
         gridDiv.appendChild(this.divNode)
 
         this.divNode.addEventListener('click', (event) => {
-            console.log('click')
             EventBus.publish(events.clicked, this.node)
         })
     }

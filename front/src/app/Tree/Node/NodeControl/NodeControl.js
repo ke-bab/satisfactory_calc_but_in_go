@@ -1,18 +1,21 @@
 import {EventBus} from "../../../Bus";
 import {events as nodeEvents} from "../RecipeNode";
+import {RecipeSelect} from "./RecipeSelect";
+
+export const className = 'selected-node-control'
 
 export class NodeControl {
     node
-    view = new View(this)
+    view
 
     constructor(recipeNode) {
         this.node = recipeNode
+        this.view = new View(this)
+        this.recipeSelectors = recipeNode.recipe.ingredients.map((part) => new RecipeSelect(part, this.view.div))
         EventBus.subscribe(nodeEvents.clicked, (node) => {this.handleNodeClick(node)})
     }
 
     handleNodeClick(node) {
-        console.log('handle')
-        console.log(node !== this.node)
         if (node !== this.node) {
             this.hide()
         } else {
@@ -38,7 +41,7 @@ class View {
 
     constructor(model) {
         this.model = model
-        this.div.classList.add('selected-node-control')
+        this.div.classList.add(className)
         this.hide()
         let leftPanel = document.querySelector('#left-panel')
         leftPanel.appendChild(this.div)
