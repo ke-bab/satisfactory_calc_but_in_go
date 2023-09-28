@@ -15,17 +15,12 @@ export class Tree {
     constructor() {
         EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => this.handleRecipeChanged(recipe))
         EventBus.subscribe(partSearchEvents.partChanged, () => this.handlePartSearchChanged())
-        // EventBus.subscribe(nodeEvents.dropped, () => this.handleNodeDropped())
-        // EventBus.subscribe(nodeEvents.created, () => this.handleNodeCreated())
-        EventBus.subscribe(ingredientEvents.connectedNodeChanged, () => this.handleNodeCreated())
-
+        EventBus.subscribe(ingredientEvents.connectedNodeChanged, () => this.handleNodeChanged())
     }
 
-    handleNodeDropped() {
+    handleNodeChanged() {
         this.view.updatePositions()
-    }
-    handleNodeCreated() {
-        this.view.updatePositions()
+
     }
 
     handlePartSearchChanged() {
