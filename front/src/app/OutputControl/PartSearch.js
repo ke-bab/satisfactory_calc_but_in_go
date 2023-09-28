@@ -5,17 +5,29 @@ export const events = {
 }
 
 export class PartSearch {
-    search = ''
-    searchInput = document.querySelector('#parts_input')
+    // search = ''
+    // searchInput = document.querySelector('#parts_input')
+    //
+    // constructor() {
+    //     this.registerOnChange()
+    // }
+    //
+    // registerOnChange() {
+    //     this.searchInput.addEventListener('change', (event) => {
+    //         this.search = this.searchInput.value
+    //         EventBus.publish(events.partChanged, this.search)
+    //     })
+    // }
+}
 
-    constructor() {
-        this.registerOnChange()
+export function PartSearchReact() {
+    function handleChange(event) {
+        EventBus.publish(events.partChanged, event.target.value)
     }
 
-    registerOnChange() {
-        this.searchInput.addEventListener('change', (event) => {
-            this.search = this.searchInput.value
-            EventBus.publish(events.partChanged, this.search)
-        })
-    }
+    return (
+        <>
+            <input id="parts_input" list="parts" placeholder="type here" onChange={(event) => handleChange(event)}/>
+        </>
+    )
 }
