@@ -7,13 +7,17 @@ export const events = {
 
 export function PartSearch() {
     const [part, setPart] = useState('')
+    function handleClick(event) {
+        EventBus.publish(events.partChanged, part)
+    }
     function handleChange(event) {
-        EventBus.publish(events.partChanged, event.target.value)
+        setPart(event.target.value)
     }
 
     return (
         <>
-            <input id="parts_input" list="parts" placeholder="type here" onChange={handleChange}/>
+            <input id="parts_input" list="parts" placeholder="type here" value={part} onChange={handleChange}/>
+            <div onClick={handleClick}>enter</div>
         </>
     )
 }

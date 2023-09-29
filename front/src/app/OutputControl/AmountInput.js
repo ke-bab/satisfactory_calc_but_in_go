@@ -48,9 +48,13 @@ export function AmountInput() {
     const [show, setShow] = useState(false)
     const [amount, setAmount] = useState(0)
     const [searchPart, setSearchPart] = useState('')
+    const [subscribed, setSubscribed] = useState(false)
 
-    EventBus.subscribe(partSearchEvents.partChanged, (part) => handlePartChanged(part))
-    EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => handleRecipeChanged(recipe))
+    if (!subscribed) {
+        EventBus.subscribe(partSearchEvents.partChanged, (part) => handlePartChanged(part))
+        EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => handleRecipeChanged(recipe))
+        setSubscribed(true)
+    }
 
     function handlePartChanged(part) {
         setShow(false)
