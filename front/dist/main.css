@@ -45,10 +45,6 @@ body {
     justify-content: center;
 }
 
-#root-control > * {
-    width: 90%;
-}
-
 #recipe_select {
     display: none;
 }

@@ -1,0 +1,18 @@
+#part-search {
+    display: flex;
+    flex-direction: row;
+}
+
+#part-search > img {
+    width: 20%;
+    display: block;
+
+}
+#part-search > img:hover {
+    cursor: pointer;
+}
+
+#part-search > input {
+    width: 80%;
+    display: block;
+}

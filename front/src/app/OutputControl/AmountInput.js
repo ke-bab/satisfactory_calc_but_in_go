@@ -62,6 +62,11 @@ export function AmountInput() {
         setAmount(0)
     }
 
+    // useEffect(() => {
+    //     console.log('Fruit', searchPart);
+    // }, [searchPart])
+    //
+
     function handleRecipeChanged(recipe) {
         if (recipe === undefined) {
             setShow(false)

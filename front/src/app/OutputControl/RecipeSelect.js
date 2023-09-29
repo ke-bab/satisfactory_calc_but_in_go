@@ -22,7 +22,6 @@ export function RecipeSelect() {
     }
 
     function handlePartChanged(part) {
-        console.log("handlePartChanged")
         if (part === '') {
             setShow(false)
             setRecipes([])
@@ -37,6 +36,7 @@ export function RecipeSelect() {
             .then((recipeList) => {
                 setRecipes(recipeList)
                 setShow(true)
+
             })
             .catch(error => {
                 setShow(false)
