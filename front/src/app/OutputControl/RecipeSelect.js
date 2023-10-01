@@ -2,6 +2,7 @@ import {EventBus} from "../Bus";
 import {events as partSearchEvents} from "./PartSearch";
 import {Recipe} from "../GameData/Recipe";
 import {useEffect, useState} from "react";
+import {RecipeState} from "./RecipeState";
 
 export const events = {
     recipeChanged: 'recipe-changed'
@@ -16,10 +17,8 @@ export function RecipeSelect() {
     )
     const [subscribed, setSubscribed] = useState(false)
 
-    if (!subscribed) {
-        EventBus.subscribe(partSearchEvents.partChanged, (part) => handlePartChanged(part))
-        setSubscribed(true)
-    }
+    const [state] = useState(new RecipeState())
+
 
     function handlePartChanged(part) {
         if (part === '') {
