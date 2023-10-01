@@ -1,7 +1,7 @@
 import {RecipeNode} from "./Node/RecipeNode";
 import {EventBus} from "../Bus";
-import {events as recipeSelectEvents} from "../OutputControl/RecipeSelect";
-import {events as partSearchEvents} from "../OutputControl/PartSearch";
+import {events as recipeSelectEvents} from "../Output/Recipe/Recipe";
+import {events as partSearchEvents} from "../Output/Part/Part";
 import {Position} from "./Node/Position";
 import {events as nodeEvents} from "./Node/RecipeNode";
 import {Recipe} from "../GameData/Recipe";

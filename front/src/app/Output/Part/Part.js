@@ -1,4 +1,4 @@
-import {EventBus} from "../Bus";
+import {EventBus} from "../../Bus";
 import {useState} from "react";
 import './part-search.css'
 import {PartState} from "./PartState";
@@ -8,8 +8,7 @@ export const events = {
     partChanged: 'part-changed'
 }
 
-function PartSearch() {
-    const [part, setPart] = useState('')
+function Part() {
     const [state] = useState(new PartState())
 
     function handleChange(e) {
@@ -28,4 +27,4 @@ function PartSearch() {
     )
 }
 
-export default observer(PartSearch)
+export default observer(Part)

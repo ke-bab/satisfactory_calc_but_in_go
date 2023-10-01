@@ -1,6 +1,6 @@
-import PartSearch from "./OutputControl/PartSearch";
-import {RecipeSelect} from "./OutputControl/RecipeSelect";
-import {AmountInput} from "./OutputControl/AmountInput";
+import Part from "./Output/Part/Part";
+import Recipe from "./Output/Recipe/Recipe";
+import Amount from "./Output/Amount/Amount";
 import {Datalist} from "./GameData/Datalist";
 
 
@@ -9,9 +9,9 @@ export function App() {
         <>
             <div id="left-panel">
                 <div id="root-control">
-                    <PartSearch/>
-                    <RecipeSelect/>
-                    <AmountInput/>
+                    <Part/>
+                    <Recipe/>
+                    <Amount/>
                 </div>
             </div>
             <Datalist/>
