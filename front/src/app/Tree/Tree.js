@@ -1,10 +1,18 @@
 import {observer} from "mobx-react-lite";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {TreeState} from "./TreeState";
 import Node from './Node/Node'
+import {EventBus} from "../Bus";
+import {events as recipeEvents} from "../Output/Recipe/RecipeState";
+import {events as partEvents} from "../Output/Part/PartState";
 
 function Tree() {
     const [state] = useState(new TreeState())
+
+    useEffect(() => {
+        EventBus.subscribe(recipeEvents.recipeChanged, (recipe)=> state.handleRecipeChanged(recipe))
+        EventBus.subscribe(partEvents.partChanged, (part)=> state.handlePartChanged(part))
+    }, []);
 
     return (
         <div id="tree">

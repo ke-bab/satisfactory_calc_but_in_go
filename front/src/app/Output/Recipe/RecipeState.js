@@ -1,6 +1,5 @@
 import {action, makeObservable, observable} from "mobx";
 import {EventBus} from "../../Bus";
-import {events as partEvents} from "../Part/PartState";
 import {Recipe} from "../../GameData/Recipe";
 
 
@@ -11,25 +10,16 @@ export const events = {
 export class RecipeState {
     /** @type {Recipe[]}*/
     recipes = []
-    test = 1
 
     setRecipes(recipes) {
         this.recipes = recipes;
     }
 
-    setTest(n) {
-        this.test = n
-    }
 
     constructor() {
         makeObservable(this, {
             recipes: observable,
-            test: observable,
             setRecipes: action,
-            setTest: action,
-        })
-        EventBus.subscribe(partEvents.partChanged, (part) => {
-            this.handlePartChanged(part)
         })
     }
 

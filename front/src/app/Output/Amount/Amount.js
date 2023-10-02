@@ -1,6 +1,9 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {observer} from "mobx-react-lite";
 import {AmountState} from "./AmountState";
+import {EventBus} from "../../Bus";
+import {events as partSearchEvents} from "../Part/PartState";
+import {events as recipeSelectEvents} from "../Recipe/RecipeState";
 
 export const events = {
     amountChanged: 'amount-changed'
@@ -8,6 +11,11 @@ export const events = {
 
 function Amount() {
     const [state] = useState(new AmountState())
+
+    useEffect(() => {
+        EventBus.subscribe(partSearchEvents.partChanged, (part) => state.handlePartChanged(part))
+        EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => state.handleRecipeChanged(recipe))
+    }, []);
 
     function handleChange(e) {
         state.setAmount(e.target.value)

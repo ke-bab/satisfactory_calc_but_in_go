@@ -1,9 +1,17 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {RecipeState} from "./RecipeState";
 import {observer} from "mobx-react-lite";
+import {EventBus} from "../../Bus";
+import {events as partEvents} from "../Part/PartState";
 
 export function Recipe() {
     const [state] = useState(new RecipeState())
+
+    useEffect(() => {
+        EventBus.subscribe(partEvents.partChanged, (part) => {
+            state.handlePartChanged(part)
+        })
+    }, []);
 
     return (
         <select onChange={(e) => state.handleRecipeChanged(e)}>
