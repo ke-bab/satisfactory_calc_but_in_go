@@ -5,6 +5,11 @@ import {EventBus} from "../Bus";
 import {events as recipeEvents} from "../Output/Recipe/RecipeState";
 import {events as partEvents} from "../Output/Part/PartState";
 import {events as ingredientEvents} from "../Tree/Node/Ingredient";
+import {Position} from "./Node/Position";
+
+export  const width = 10
+export const height = 5
+
 
 export class TreeState {
     /**
@@ -12,26 +17,19 @@ export class TreeState {
      */
     rootNode = null
     _part = ''
-    forceUpdate = false
 
     constructor() {
         makeObservable(this, {
             rootNode: observable,
-            forceUpdate: observable,
             setRootNode: action,
-            triggerForceUpdate: action,
         })
         EventBus.subscribe(recipeEvents.recipeChanged, (recipe)=> this.handleRecipeChanged(recipe))
         EventBus.subscribe(partEvents.partChanged, (part)=> this.handlePartChanged(part))
-        // EventBus.subscribe(ingredientEvents.recipeChanged, ()=> this.handleIngredientRecipeChanged())
+        EventBus.subscribe(ingredientEvents.recipeChanged, ()=> this.handleIngredientRecipeChanged())
     }
 
     handleIngredientRecipeChanged() {
-        this.triggerForceUpdate()
-    }
-
-    triggerForceUpdate() {
-        this.forceUpdate = !this.forceUpdate
+        this.updatePositions()
     }
 
     setRootNode(node) {
@@ -72,5 +70,28 @@ export class TreeState {
 
     handlePartChanged(part) {
         this._part = part
+    }
+
+    updatePositions(recipeNode = this.rootNode, pos = new Position(0, 0), deepLevel = 0) {
+        if (recipeNode === null) {
+            return
+        }
+
+        recipeNode.pos = new Position(pos.x * width + (deepLevel), pos.y * height)
+
+        deepLevel++
+
+        let ingredients = recipeNode.getIngredientsWithConnectedNodes()
+        for (let i = 0; i < ingredients.length; i++) {
+            let y = pos.y + i
+            if (i > 0) {
+                y = pos.y + i + (ingredients[i - 1].childNode.size - 1)
+            }
+            this.updatePositions(
+                ingredients[i].childNode,
+                new Position(pos.x + 1, y),
+                deepLevel
+            )
+        }
     }
 }

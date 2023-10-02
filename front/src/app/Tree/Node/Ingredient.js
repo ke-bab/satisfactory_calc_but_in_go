@@ -47,12 +47,12 @@ export class Ingredient {
         const recipe = this.recipeOptions.find((r) => r.name === name)
         this.setSelectedRecipe(recipe === undefined ? null : recipe)
         if (this.selectedRecipe !== null) {
-            this.setChildNode(new NodeState(this.selectedRecipe, this.name))
+            this.setChildNode(new NodeState(this.selectedRecipe, this.name, this))
         } else {
             this.setChildNode(null)
         }
         this.parentNode.updateSizeRecursive()
-        // EventBus.publish(events.recipeChanged, this)
+        EventBus.publish(events.recipeChanged, this)
     }
 
     setSelectedRecipe(recipe) {
