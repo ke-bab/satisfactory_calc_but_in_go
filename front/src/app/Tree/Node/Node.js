@@ -1,9 +1,9 @@
 import {observer} from "mobx-react-lite";
-
+import {Ingredient} from "./NodeState";
 
 function Node({state, keyK: index}) {
 
-    function getWidthHeightStyleString(len) {
+    function getWidthHeight(len) {
         let w = 100
         let h = 100
 
@@ -15,9 +15,28 @@ function Node({state, keyK: index}) {
             h = 50
         }
 
-        return 'width: ' + w + '%; height: ' + h + '%'
+        return {
+            width: w + '%',
+            height: w + '%',
+        }
     }
 
+
+    /**
+     *
+     * @param {Ingredient} ingredient
+     * @param {number} index
+     * @return {JSX.Element}
+     */
+    function mapIngredients(ingredient, index) {
+
+        const styles = getWidthHeight(state.ingredients.length)
+
+        return <div key={index} style={styles} className="ingredient">
+            <img className="image" src="/static/images/Assembler.png" alt=""/>
+            <div className="count">{ingredient.amountPerMin  + '/m'}</div>
+        </div>
+    }
 
     return (
         <div className={"cell"} key={index}>
@@ -27,14 +46,7 @@ function Node({state, keyK: index}) {
             </div>
             <div className="right">
                 {
-                    state.ingredients.map((i) => {
-                        const styles = getWidthHeightStyleString(state.ingredients.length)
-
-                        return <div style={styles} className="ingredient">
-                            <img className="image" src="/static/images/Assembler.png" alt=""/>
-                            <div className="count">{i.amount} + '/m'</div>
-                        </div>
-                    })
+                    state.ingredients.map(mapIngredients)
                 }
             </div>
         </div>

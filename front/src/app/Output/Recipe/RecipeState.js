@@ -35,7 +35,6 @@ export class RecipeState {
 
     handleRecipeChanged(e) {
         let recipe = this.recipes.find((r) => r.name === e.target.value)
-        console.log("recipe handleRecipeChanged")
         EventBus.publish(events.recipeChanged, recipe ? recipe : null)
     }
 

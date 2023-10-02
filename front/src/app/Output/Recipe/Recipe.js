@@ -6,7 +6,7 @@ export function Recipe() {
     const [state] = useState(new RecipeState())
 
     return (
-        <select onChange={(e) => state.handleRecipeChanged(e)} value=''>
+        <select onChange={(e) => state.handleRecipeChanged(e)}>
             <option value="">not selected</option>
             {state.recipes.map((recipe, index) =>
                 <option key={index} value={recipe.name}>{recipe.displayName}</option>

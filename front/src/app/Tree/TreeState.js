@@ -48,7 +48,6 @@ export class TreeState {
      * @param {?Recipe} recipe
      */
     handleRecipeChanged(recipe) {
-        console.log("tree handleRecipeChanged")
         if (recipe === null) {
             this.setRootNode(null)
         } else {
