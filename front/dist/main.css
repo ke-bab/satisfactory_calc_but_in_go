@@ -28,13 +28,13 @@ body {
     height: 80%;
 }
 
-#grid {
+#tree {
     width: 80%;
     height: 80%;
     position: relative;
 }
 
-#root-control {
+#output {
     height: 30%;
     border-radius: 0.4em;
     background-color: rgb(255 255 255 / 0.2);
@@ -43,26 +43,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-#recipe_select {
-    display: none;
-}
-
-#amount_img {
-    width: 3em;
-    display: block;
-}
-
-#amount_input {
-    width: 4em;
-}
-
-.selected-node-control {
-    height: 20%;
-    border-radius: 0.4em;
-    background-color: rgb(255 255 255 / 0.2);
-    backdrop-filter: blur(5px);
 }
 
 
@@ -120,14 +100,3 @@ body {
     text-align: center;
 }
 
-#total {
-    display: none;
-}
-
-.hidden {
-    display: none;
-}
-
-.shown {
-    display: block;
-}

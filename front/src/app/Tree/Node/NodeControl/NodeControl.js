@@ -1,7 +1,3 @@
-import {EventBus} from "../../../Bus";
-import {events as nodeEvents} from "../RecipeNode";
-import {RecipeSelect} from "./RecipeSelect";
-
 export const className = 'selected-node-control'
 
 // export class NodeControl {

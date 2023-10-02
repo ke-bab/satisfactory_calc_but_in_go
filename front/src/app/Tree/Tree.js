@@ -1,11 +1,22 @@
-import {RecipeNode} from "./Node/RecipeNode";
-import {EventBus} from "../Bus";
-import {events as recipeSelectEvents} from "../Output/Recipe/Recipe";
-import {events as partSearchEvents} from "../Output/Part/Part";
-import {Position} from "./Node/Position";
-import {events as nodeEvents} from "./Node/RecipeNode";
-import {Recipe} from "../GameData/Recipe";
-import {events as ingredientEvents} from "./Node/Ingredient";
+import {observer} from "mobx-react-lite";
+import {useState} from "react";
+import {TreeState} from "./TreeState";
+import Node from './Node/Node'
+
+function Tree() {
+    const [state] = useState(new TreeState())
+
+    return (
+        <div id="tree">
+            {state.getAllNodesAsList().map((nodeState, index) => {
+                return <Node state={nodeState} key={index}/>
+            })}
+        </div>
+    )
+}
+
+export default observer(Tree)
+
 
 // export class Tree {
 //     /** @type ?RecipeNode */

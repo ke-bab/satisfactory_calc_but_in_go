@@ -16,7 +16,6 @@ function Amount() {
 
     return (
         <div id="amount">
-            <img id="amount_img" src="/static/images/Assembler.png"/>
             <input id="amount_input" type="number" min="0" value={state.amount} onChange={handleChange}/>
         </div>
     )

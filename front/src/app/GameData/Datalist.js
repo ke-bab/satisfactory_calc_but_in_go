@@ -26,7 +26,7 @@ export function Datalist() {
                 console.log(err)
             })
         return () => {}
-    }, [setOptions]);
+    }, []);
 
     return (
         <datalist id="parts">

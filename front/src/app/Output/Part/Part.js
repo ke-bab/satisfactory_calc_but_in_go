@@ -13,16 +13,12 @@ function Part() {
 
     function handleChange(e) {
         state.setPart(e.target.value)
-    }
-
-    function handleClick() {
         EventBus.publish(events.partChanged, state.part)
     }
 
     return (
         <div id="part-search">
             <input id="parts_input" list="parts" placeholder="type here" onChange={handleChange} />
-            <img src="/static/images/play-button.svg" alt="" onClick={handleClick}/>
         </div>
     )
 }
