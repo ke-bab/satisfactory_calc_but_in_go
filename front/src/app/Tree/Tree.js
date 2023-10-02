@@ -7,12 +7,7 @@ import {events as recipeEvents} from "../Output/Recipe/RecipeState";
 import {events as partEvents} from "../Output/Part/PartState";
 
 function Tree() {
-    const [state] = useState(new TreeState())
-
-    useEffect(() => {
-        EventBus.subscribe(recipeEvents.recipeChanged, (recipe)=> state.handleRecipeChanged(recipe))
-        EventBus.subscribe(partEvents.partChanged, (part)=> state.handlePartChanged(part))
-    }, []);
+    const [state] = useState(() => new TreeState())
 
     return (
         <div id="tree">

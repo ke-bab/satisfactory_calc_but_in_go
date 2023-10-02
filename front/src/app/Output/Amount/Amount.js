@@ -10,12 +10,7 @@ export const events = {
 }
 
 function Amount() {
-    const [state] = useState(new AmountState())
-
-    useEffect(() => {
-        EventBus.subscribe(partSearchEvents.partChanged, (part) => state.handlePartChanged(part))
-        EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => state.handleRecipeChanged(recipe))
-    }, []);
+    const [state] = useState(() => new AmountState())
 
     function handleChange(e) {
         state.setAmount(e.target.value)

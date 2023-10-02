@@ -6,7 +6,7 @@ import {observer} from "mobx-react-lite";
 
 
 function Part() {
-    const [state] = useState(new PartState())
+    const [state] = useState(() => new PartState())
 
     return (
         <div id="part-search">

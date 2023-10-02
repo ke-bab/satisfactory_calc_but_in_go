@@ -1,6 +1,7 @@
 import {action, makeObservable, observable} from "mobx";
 import {EventBus} from "../../Bus";
 import {Recipe} from "../../GameData/Recipe";
+import {events as partEvents} from "../Part/PartState";
 
 
 export const events = {
@@ -20,6 +21,10 @@ export class RecipeState {
         makeObservable(this, {
             recipes: observable,
             setRecipes: action,
+        })
+
+        EventBus.subscribe(partEvents.partChanged, (part) => {
+            this.handlePartChanged(part)
         })
     }
 

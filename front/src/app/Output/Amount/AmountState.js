@@ -1,4 +1,7 @@
 import {action, makeObservable, observable} from "mobx";
+import {EventBus} from "../../Bus";
+import {events as partSearchEvents} from "../Part/PartState";
+import {events as recipeSelectEvents} from "../Recipe/RecipeState";
 
 export class AmountState {
     amount = 0
@@ -10,6 +13,8 @@ export class AmountState {
             amount: observable,
             setAmount: action,
         })
+        EventBus.subscribe(partSearchEvents.partChanged, (part) => this.handlePartChanged(part))
+        EventBus.subscribe(recipeSelectEvents.recipeChanged, (recipe) => this.handleRecipeChanged(recipe))
     }
 
     setAmount(amount) {

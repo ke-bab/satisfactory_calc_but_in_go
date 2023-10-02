@@ -1,6 +1,9 @@
 import {action, makeObservable, observable} from "mobx";
 import {Recipe} from '../GameData/Recipe'
 import {NodeState} from './Node/NodeState'
+import {EventBus} from "../Bus";
+import {events as recipeEvents} from "../Output/Recipe/RecipeState";
+import {events as partEvents} from "../Output/Part/PartState";
 
 export class TreeState {
     /**
@@ -14,6 +17,8 @@ export class TreeState {
             rootNode: observable,
             setRootNode: action,
         })
+        EventBus.subscribe(recipeEvents.recipeChanged, (recipe)=> this.handleRecipeChanged(recipe))
+        EventBus.subscribe(partEvents.partChanged, (part)=> this.handlePartChanged(part))
     }
 
     setRootNode(node) {

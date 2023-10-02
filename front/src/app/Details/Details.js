@@ -7,13 +7,7 @@ import {events as recipeEvents} from "../Output/Recipe/RecipeState";
 import {events as partEvents} from "../Output/Part/PartState";
 
 function Details() {
-    const [state] = useState(new DetailsState())
-
-    useEffect(() => {
-        EventBus.subscribe(nodeEvents.clicked, (node) => state.handleNodeClick(node))
-        EventBus.subscribe(recipeEvents.recipeChanged, (node) => state.handleOutputChanged())
-        EventBus.subscribe(partEvents.partChanged, (node) => state.handleOutputChanged())
-    }, []);
+    const [state] = useState(() => new DetailsState())
 
     if (state.node) {
         return (

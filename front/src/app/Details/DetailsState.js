@@ -1,5 +1,8 @@
 import {action, makeObservable, observable} from "mobx";
-import {NodeState} from "../Tree/Node/NodeState";
+import {events as nodeEvents, NodeState} from "../Tree/Node/NodeState";
+import {EventBus} from "../Bus";
+import {events as recipeEvents} from "../Output/Recipe/RecipeState";
+import {events as partEvents} from "../Output/Part/PartState";
 
 export class DetailsState {
     /** @type {?NodeState}*/
@@ -9,6 +12,9 @@ export class DetailsState {
             node: observable,
             setNode: action,
         })
+        EventBus.subscribe(nodeEvents.clicked, (node) => this.handleNodeClick(node))
+        EventBus.subscribe(recipeEvents.recipeChanged, (node) => this.handleOutputChanged())
+        EventBus.subscribe(partEvents.partChanged, (node) => this.handleOutputChanged())
     }
 
     setNode(node) {
