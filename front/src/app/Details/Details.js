@@ -19,7 +19,7 @@ function Details() {
                         return <div key={index}>
                             <span>{ingredient.name} - {ingredient.amountPerMin + "/m"}</span>
                             <span>
-                            <select>
+                            <select onChange={(e) => ingredient.setSelectedRecipeByName(e.target.value)}>
                                 <option value="">not selected</option>
                                 {ingredient.recipeOptions.map((recipe, index) => {
                                     return <option value={recipe.name} key={index}>{recipe.displayName}</option>

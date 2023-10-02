@@ -9,6 +9,8 @@ import {events as partEvents} from "../Output/Part/PartState";
 function Tree() {
     const [state] = useState(() => new TreeState())
 
+
+    console.log("tree re-rendered")
     return (
         <div id="tree">
             {state.getAllNodesAsList().map((nodeState, index) => {

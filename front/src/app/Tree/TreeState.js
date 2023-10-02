@@ -4,6 +4,7 @@ import {NodeState} from './Node/NodeState'
 import {EventBus} from "../Bus";
 import {events as recipeEvents} from "../Output/Recipe/RecipeState";
 import {events as partEvents} from "../Output/Part/PartState";
+import {events as ingredientEvents} from "../Tree/Node/Ingredient";
 
 export class TreeState {
     /**
@@ -11,14 +12,26 @@ export class TreeState {
      */
     rootNode = null
     _part = ''
+    forceUpdate = false
 
     constructor() {
         makeObservable(this, {
             rootNode: observable,
+            forceUpdate: observable,
             setRootNode: action,
+            triggerForceUpdate: action,
         })
         EventBus.subscribe(recipeEvents.recipeChanged, (recipe)=> this.handleRecipeChanged(recipe))
         EventBus.subscribe(partEvents.partChanged, (part)=> this.handlePartChanged(part))
+        // EventBus.subscribe(ingredientEvents.recipeChanged, ()=> this.handleIngredientRecipeChanged())
+    }
+
+    handleIngredientRecipeChanged() {
+        this.triggerForceUpdate()
+    }
+
+    triggerForceUpdate() {
+        this.forceUpdate = !this.forceUpdate
     }
 
     setRootNode(node) {

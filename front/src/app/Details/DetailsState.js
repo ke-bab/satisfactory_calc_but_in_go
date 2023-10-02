@@ -3,6 +3,7 @@ import {events as nodeEvents, NodeState} from "../Tree/Node/NodeState";
 import {EventBus} from "../Bus";
 import {events as recipeEvents} from "../Output/Recipe/RecipeState";
 import {events as partEvents} from "../Output/Part/PartState";
+import {Ingredient} from "../Tree/Node/Ingredient";
 
 export class DetailsState {
     /** @type {?NodeState}*/
