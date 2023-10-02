@@ -5,6 +5,7 @@ import {EventBus} from "../Bus";
 import {events as nodeEvents} from "../Tree/Node/NodeState";
 import {events as recipeEvents} from "../Output/Recipe/RecipeState";
 import {events as partEvents} from "../Output/Part/PartState";
+import './details.css'
 
 function Details() {
     const [state] = useState(() => new DetailsState())
@@ -19,7 +20,10 @@ function Details() {
                         return <div key={index}>
                             <span>{ingredient.name} - {ingredient.amountPerMin + "/m"}</span>
                             <span>
-                            <select onChange={(e) => ingredient.setSelectedRecipeByName(e.target.value)}>
+                            <select
+                                onChange={(e) => ingredient.setSelectedRecipeByName(e.target.value)}
+                                value={ingredient.selectedRecipe ? ingredient.selectedRecipe.name : ''}
+                            >
                                 <option value="">not selected</option>
                                 {ingredient.recipeOptions.map((recipe, index) => {
                                     return <option value={recipe.name} key={index}>{recipe.displayName}</option>
