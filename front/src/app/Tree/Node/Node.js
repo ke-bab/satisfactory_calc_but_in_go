@@ -39,7 +39,7 @@ function Node({state, keyK: index}) {
     }
 
     return (
-        <div className={"cell"} key={index}>
+        <div className={"cell"} key={index} onClick={(e) => state.handleClick(e)}>
             <div className="left">
                 <img src="/static/images/Assembler.png" alt=""/>
                 <div>x1</div>

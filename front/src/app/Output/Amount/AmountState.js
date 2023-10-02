@@ -1,5 +1,5 @@
 import {EventBus} from "../../Bus";
-import {events as partSearchEvents} from "../Part/Part";
+import {events as partSearchEvents} from "../Part/PartState";
 import {events as recipeSelectEvents} from "../Recipe/RecipeState";
 import {makeObservable, observable, action} from "mobx";
 

@@ -9,4 +9,13 @@ export class Recipe {
     products = []
     manufactoringDuration = 1
     producedIn = ''
+
+    findProduct(name) {
+        const found = this.products.find((p) => p.name = name)
+        if (!found) {
+            return null
+        }
+
+        return found
+    }
 }

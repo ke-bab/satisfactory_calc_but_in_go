@@ -1,6 +1,7 @@
 import {action, makeObservable, observable} from "mobx";
 import {EventBus} from "../../Bus";
-import {events as partEvents} from "../Part/Part";
+import {events as partEvents} from "../Part/PartState";
+import {Recipe} from "../../GameData/Recipe";
 
 
 export const events = {
@@ -8,18 +9,25 @@ export const events = {
 }
 
 export class RecipeState {
+    /** @type {Recipe[]}*/
     recipes = []
+    test = 1
 
     setRecipes(recipes) {
         this.recipes = recipes;
     }
 
+    setTest(n) {
+        this.test = n
+    }
+
     constructor() {
         makeObservable(this, {
             recipes: observable,
+            test: observable,
             setRecipes: action,
+            setTest: action,
         })
-
         EventBus.subscribe(partEvents.partChanged, (part) => {
             this.handlePartChanged(part)
         })
@@ -43,11 +51,22 @@ export class RecipeState {
         fetch('/find-recipe-by-product?product=' + part)
             .then((response) => response.json())
             .then((recipeList) => {
-                this.setRecipes(recipeList)
-
+                this.setRecipes(recipeList.map(this.makeRecipeFromObject))
             })
             .catch(error => {
                 this.setRecipes([])
             })
+    }
+
+    makeRecipeFromObject(recipeObject) {
+        const newRecipe = new Recipe()
+        newRecipe.name = recipeObject.name
+        newRecipe.displayName = recipeObject.displayName
+        newRecipe.ingredients = recipeObject.ingredients
+        newRecipe.products = recipeObject.products
+        newRecipe.manufactoringDuration = recipeObject.manufactoringDuration
+        newRecipe.producedIn = recipeObject.producedIn
+
+        return newRecipe
     }
 }
