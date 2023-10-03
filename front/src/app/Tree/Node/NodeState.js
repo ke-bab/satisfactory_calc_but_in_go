@@ -6,8 +6,6 @@ import {Position} from "./Position";
 
 export const events = {
     clicked: 'node-clicked',
-    created: 'node-created',
-    removed: 'node-removed',
 }
 
 export class NodeState {
@@ -33,7 +31,6 @@ export class NodeState {
         this.ingredients = recipe.ingredients.map(
             (i) => new Ingredient(i.name, i.amount, recipe.manufactoringDuration, this)
         )
-        EventBus.publish(events.created, this)
     }
 
     handleClick(e) {
@@ -63,5 +60,13 @@ export class NodeState {
 
     getIngredientsWithConnectedNodes() {
         return this.ingredients.filter((i) => i.childNode !== null)
+    }
+
+    static new() {
+
+    }
+
+    static drop() {
+
     }
 }

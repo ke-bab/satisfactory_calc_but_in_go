@@ -11,6 +11,10 @@ import {Position} from "./Node/Position";
 export  const width = 10
 export const height = 5
 
+export const events = {
+    nodeAdded: 'root-node-added',
+    nodeRemoved: 'root- node-removed',
+}
 
 export class TreeState {
     /**
@@ -37,7 +41,10 @@ export class TreeState {
         let oldNode = this.rootNode
         this.rootNode = node
         if (oldNode !== null) {
-            EventBus.publish(nodeEvents.removed, oldNode)
+            EventBus.publish(events.nodeRemoved, oldNode)
+        }
+        if (node !== null) {
+            EventBus.publish(events.nodeAdded, node)
         }
     }
 

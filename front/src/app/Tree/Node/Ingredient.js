@@ -5,7 +5,9 @@ import {EventBus} from "../../Bus";
 import {events as nodeEvents} from "./NodeState";
 
 export const events = {
-    recipeChanged: 'ingredient-recipe-changed'
+    recipeChanged: 'ingredient-recipe-changed',
+    nodeAdded: 'ingredient-node-added',
+    nodeRemoved: 'ingredient-node-removed',
 }
 
 export class Ingredient {
@@ -42,7 +44,14 @@ export class Ingredient {
     }
 
     setChildNode(node) {
+        let oldNode = this.childNode
         this.childNode = node
+        if (oldNode !== null) {
+            EventBus.publish(events.nodeRemoved, oldNode)
+        }
+        if (node !== null) {
+            EventBus.publish(events.nodeAdded, node)
+        }
     }
     setSelectedRecipeByName(name) {
         const recipe = this.recipeOptions.find((r) => r.name === name)
@@ -50,9 +59,7 @@ export class Ingredient {
         if (this.selectedRecipe !== null) {
             this.setChildNode(new NodeState(this.selectedRecipe, this.name, this))
         } else {
-            let childNode = this.childNode
             this.setChildNode(null)
-            EventBus.publish(nodeEvents.removed, childNode)
         }
         this.parentNode.updateSizeRecursive()
         EventBus.publish(events.recipeChanged, this)

@@ -1,7 +1,8 @@
 import {Ingredient} from "../Tree/Node/Ingredient";
 import {action, computed, makeObservable, observable} from "mobx";
 import {EventBus} from "../Bus";
-import {events as nodeEvents} from "../Tree/Node/NodeState";
+import {events as treeEvents} from "../Tree/TreeState";
+import {events as ingredientEvents} from "../Tree/Node/Ingredient";
 import {NodeState} from "../Tree/Node/NodeState";
 import './total.css'
 
@@ -15,12 +16,13 @@ export class TotalState {
             pushIngredient: action,
             dropIngredient: action,
         })
-        EventBus.subscribe(nodeEvents.created, (node) => this.handleNodeCreated(node))
-        EventBus.subscribe(nodeEvents.removed, (node) => this.handleNodeRemoved(node))
+        EventBus.subscribe(treeEvents.nodeAdded, (node) => this.handleNodeCreated(node))
+        EventBus.subscribe(treeEvents.nodeRemoved, (node) => this.handleNodeRemoved(node))
+        EventBus.subscribe(ingredientEvents.nodeAdded, (node) => this.handleNodeCreated(node))
+        EventBus.subscribe(ingredientEvents.nodeRemoved, (node) => this.handleNodeRemoved(node))
     }
 
     /**
-     *
      * @param {NodeState} node
      */
     handleNodeCreated(node) {
@@ -31,7 +33,6 @@ export class TotalState {
     }
 
     /**
-     *
      * @param {NodeState} node
      */
     handleNodeRemoved(node) {
