@@ -9,7 +9,7 @@ export function Recipe() {
 
 
     return (
-        <select onChange={(e) => state.handleRecipeChanged(e)}>
+        <select onChange={(e) => state.handleRecipeChanged(e)} value={state.selectedRecipe ? state.selectedRecipe.name : '' }>
             <option value="">not selected</option>
             {state.recipes.map((recipe, index) =>
                 <option key={index} value={recipe.name}>{recipe.displayName}</option>

@@ -1,0 +1,7 @@
+#total {
+    border-radius: 0.4em;
+    background-color: rgb(255 255 255 / 0.2);
+    backdrop-filter: blur(5px);
+    font-family: "Courier New", Courier, monospace;
+
+}

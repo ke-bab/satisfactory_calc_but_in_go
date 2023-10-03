@@ -11,6 +11,8 @@ export const events = {
 export class RecipeState {
     /** @type {Recipe[]}*/
     recipes = []
+    /** @type {?Recipe}*/
+    selectedRecipe = null
 
     setRecipes(recipes) {
         this.recipes = recipes;
@@ -34,6 +36,7 @@ export class RecipeState {
         } else {
             this.loadRecipes(part)
         }
+        EventBus.publish(events.recipeChanged, this.selectedRecipe)
     }
 
     handleRecipeChanged(e) {

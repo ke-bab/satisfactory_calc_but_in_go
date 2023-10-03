@@ -5,7 +5,9 @@ import {Ingredient} from "./Ingredient";
 import {Position} from "./Position";
 
 export const events = {
-    clicked: 'node-clicked'
+    clicked: 'node-clicked',
+    created: 'node-created',
+    removed: 'node-removed',
 }
 
 export class NodeState {
@@ -31,6 +33,7 @@ export class NodeState {
         this.ingredients = recipe.ingredients.map(
             (i) => new Ingredient(i.name, i.amount, recipe.manufactoringDuration, this)
         )
+        EventBus.publish(events.created, this)
     }
 
     handleClick(e) {

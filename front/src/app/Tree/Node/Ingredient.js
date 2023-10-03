@@ -2,6 +2,7 @@ import {action, computed, makeObservable, observable} from "mobx";
 import {Recipe} from "../../GameData/Recipe";
 import {NodeState} from "./NodeState";
 import {EventBus} from "../../Bus";
+import {events as nodeEvents} from "./NodeState";
 
 export const events = {
     recipeChanged: 'ingredient-recipe-changed'
@@ -49,7 +50,9 @@ export class Ingredient {
         if (this.selectedRecipe !== null) {
             this.setChildNode(new NodeState(this.selectedRecipe, this.name, this))
         } else {
+            let childNode = this.childNode
             this.setChildNode(null)
+            EventBus.publish(nodeEvents.removed, childNode)
         }
         this.parentNode.updateSizeRecursive()
         EventBus.publish(events.recipeChanged, this)

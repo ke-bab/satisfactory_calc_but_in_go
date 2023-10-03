@@ -27,7 +27,7 @@ export class AmountState {
     }
 
     handleRecipeChanged(recipe) {
-        if (recipe === '') {
+        if (recipe === null) {
             this.setAmount(0)
         } else {
             let part = recipe.products.find((part) => part.name === this._part)

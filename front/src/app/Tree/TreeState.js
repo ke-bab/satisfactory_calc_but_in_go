@@ -5,6 +5,7 @@ import {EventBus} from "../Bus";
 import {events as recipeEvents} from "../Output/Recipe/RecipeState";
 import {events as partEvents} from "../Output/Part/PartState";
 import {events as ingredientEvents} from "../Tree/Node/Ingredient";
+import {events as nodeEvents} from "../Tree/Node/NodeState";
 import {Position} from "./Node/Position";
 
 export  const width = 10
@@ -33,7 +34,11 @@ export class TreeState {
     }
 
     setRootNode(node) {
+        let oldNode = this.rootNode
         this.rootNode = node
+        if (oldNode !== null) {
+            EventBus.publish(nodeEvents.removed, oldNode)
+        }
     }
 
     /**
