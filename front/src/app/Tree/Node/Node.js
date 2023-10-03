@@ -42,7 +42,7 @@ function Node({state, keyK: index}) {
 
         return <div key={index} style={styles} className="ingredient">
             <img className="image" src="/static/images/Assembler.png" alt=""/>
-            <div className="count">{ingredient.amountPerMinM  + '/m'}</div>
+            <div className="count">{ingredient.amountPerMinMulti  + '/m'}</div>
         </div>
     }
 

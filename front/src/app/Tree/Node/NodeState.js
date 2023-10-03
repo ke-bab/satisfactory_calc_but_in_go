@@ -21,18 +21,21 @@ export class NodeState {
     parentIngredient;
     pos = new Position()
     multiplier = 1
+    amountPerMin = 0
+    amountPerMinMulti = 0
     /**
      * @param {Recipe} recipe
      * @param {string} part
      * @param {?Ingredient} parentIngredient
-     * @param {number} multiplier
+     * @param {number} amountPerMinTarget
      */
-    constructor(recipe, part, parentIngredient = null, amountPerMin) {
+    constructor(recipe, part, parentIngredient = null, amountPerMinTarget) {
         makeObservable(this, {
             multiplier: observable,
             setMultiplier: action,
-            amountPerMin: computed,
-            amountPerMinM: computed,
+            amountPerMin: observable,
+            amountPerMinMulti: observable,
+            setAmountPerMinMulti: action,
         })
 
         this.recipe = recipe;
@@ -41,44 +44,39 @@ export class NodeState {
         this.ingredients = recipe.ingredients.map(
             (i) => new Ingredient(i.name, i.amount, recipe.manufactoringDuration, this)
         )
-        this.updateMultiplierRecursive(amountPerMin)
+        this.amountPerMin = 60 / this.recipe.manufactoringDuration * this.mainProduct.amount
+        this.amountPerMinMulti = 60 / this.recipe.manufactoringDuration * this.mainProduct.amount * this.multiplier
+        this.updateMultiplierRecursive(amountPerMinTarget)
     }
 
-    updateMultiplierRecursive(requirementPerMin) {
-        this.setMultiplier(requirementPerMin / this.getAmountPerMinM())
+    setAmountPerMinMulti(amount) {
+        this.amountPerMinMulti = amount
+    }
 
-        this.ingredients.forEach()
+    updateAmounts() {
+        this.setAmountPerMinMulti(60 / this.recipe.manufactoringDuration * this.mainProduct.amount * this.multiplier)
 
-        this.getIngredientsWithConnectedNodes().forEach((i) => {
-            console.log("this.getIngredientsWithConnectedNodes().forEach")
-            console.log(i.getAmountPerMinM())
-            i.childNode.updateMultiplierRecursive(i.getAmountPerMinM())
+    }
+
+    updateMultiplierRecursive(amountPerMinTarget) {
+        this.setMultiplier(amountPerMinTarget / this.amountPerMin)
+        this.updateAmounts()
+        this.ingredients.forEach((i) => {
+            i.updateAmounts()
         })
+        this.getIngredientsWithConnectedNodes().forEach((i) => {
+            console.log("i.childNode.updateMultiplierRecursive(i.amountPerMinMulti)")
+            i.childNode.updateMultiplierRecursive(i.amountPerMinMulti)
+        })
+
     }
 
     setMultiplier(m) {
         this.multiplier = m
-
     }
 
     handleClick(e) {
         EventBus.publish(events.clicked, this)
-    }
-
-    getAmountPerMin() {
-        return 60 / this.recipe.manufactoringDuration * this.mainProduct.amount
-    }
-
-    get amountPerMin() {
-        return this.getAmountPerMin()
-    }
-
-    getAmountPerMinM() {
-        return 60 / this.recipe.manufactoringDuration * this.mainProduct.amount * this.multiplier
-    }
-
-    get amountPerMinM() {
-        return this.getAmountPerMinM()
     }
 
     updateSizeRecursive() {

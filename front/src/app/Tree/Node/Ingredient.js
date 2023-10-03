@@ -14,6 +14,8 @@ export class Ingredient {
     name;
     amount;
     manufacturingDuration;
+    amountPerMin
+    amountPerMinMulti
 
     /** @type {?Recipe}*/
     selectedRecipe = null
@@ -31,17 +33,35 @@ export class Ingredient {
         this.parentNode = node;
         makeObservable(this, {
             amount: observable,
+            amountPerMin: observable,
+            amountPerMinMulti: observable,
+            setAmountPerMin: action,
+            setAmountPerMinMulti: action,
             recipeOptions: observable,
             selectedRecipe: observable,
             childNode: observable,
-            amountPerMin: computed,
-            amountPerMinM: computed,
             setRecipeOptions: action,
             setSelectedRecipe: action,
             setChildNode: action,
         })
-
+        this.updateAmounts()
         this.loadRecipeOptions()
+    }
+
+    setAmountPerMin(amount) {
+        this.amountPerMin = amount
+    }
+
+    setAmountPerMinMulti(amount) {
+        this.amountPerMinMulti = amount
+    }
+
+    updateAmounts() {
+        this.setAmountPerMin(60 / this.manufacturingDuration * this.amount)
+        this.setAmountPerMinMulti(60 / this.manufacturingDuration * this.amount * this.parentNode.multiplier)
+        console.log(this.name)
+        console.log(this.amountPerMinMulti)
+        console.log(this.parentNode.multiplier)
     }
 
     setChildNode(node) {
@@ -59,7 +79,7 @@ export class Ingredient {
         const recipe = this.recipeOptions.find((r) => r.name === name)
         this.setSelectedRecipe(recipe === undefined ? null : recipe)
         if (this.selectedRecipe !== null) {
-            let newNode = new NodeState(this.selectedRecipe,this.name,this,this.getAmountPerMinM())
+            let newNode = new NodeState(this.selectedRecipe,this.name,this,this.amountPerMinMulti)
             this.setChildNode(newNode)
         } else {
             this.setChildNode(null)
@@ -76,22 +96,6 @@ export class Ingredient {
         this.recipeOptions = options
     }
 
-    getAmountPerMin() {
-        return 60 / this.manufacturingDuration * this.amount
-
-    }
-
-    getAmountPerMinM() {
-        return 60 / this.manufacturingDuration * this.amount * this.parentNode.multiplier
-    }
-
-    get amountPerMin() {
-        return this.getAmountPerMin()
-    }
-
-    get amountPerMinM() {
-        return this.getAmountPerMinM()
-    }
 
     loadRecipeOptions() {
         fetch('/find-recipe-by-product?product=' + this.name)
