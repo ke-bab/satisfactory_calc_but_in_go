@@ -2,7 +2,7 @@ import {action, computed, makeObservable, observable} from "mobx";
 import {Recipe} from "../../GameData/Recipe";
 import {NodeState} from "./NodeState";
 import {EventBus} from "../../Bus";
-import {events as nodeEvents} from "./NodeState";
+import {Part} from "../../GameData/Part";
 
 export const events = {
     recipeChanged: 'ingredient-recipe-changed',
@@ -11,12 +11,8 @@ export const events = {
 }
 
 export class Ingredient {
-    name;
-    amount;
-    manufacturingDuration;
-    amountPerMin
-    amountPerMinMulti
-
+    /** @type {Part}*/
+    part
     /** @type {?Recipe}*/
     selectedRecipe = null
     /** @type {Recipe[]}*/
@@ -26,42 +22,31 @@ export class Ingredient {
     /** @type {?NodeState}*/
     parentNode;
 
-    constructor(name, amount, manufacturingDuration, node) {
-        this.name = name;
-        this.amount = amount;
-        this.manufacturingDuration = manufacturingDuration;
+    constructor(part, node) {
+        this.part = part
         this.parentNode = node;
         makeObservable(this, {
-            amount: observable,
-            amountPerMin: observable,
-            amountPerMinMulti: observable,
-            setAmountPerMin: action,
-            setAmountPerMinMulti: action,
             recipeOptions: observable,
-            selectedRecipe: observable,
-            childNode: observable,
             setRecipeOptions: action,
+            //
+            selectedRecipe: observable,
             setSelectedRecipe: action,
+            //
+            childNode: observable,
             setChildNode: action,
+            //
+            amountPerMin: computed,
+            amountPerMinX: computed,
         })
-        this.updateAmounts()
         this.loadRecipeOptions()
     }
 
-    setAmountPerMin(amount) {
-        this.amountPerMin = amount
+    get amountPerMin() {
+        return 60 / this.parentNode.recipe.manufactoringDuration * this.part.amount
     }
 
-    setAmountPerMinMulti(amount) {
-        this.amountPerMinMulti = amount
-    }
-
-    updateAmounts() {
-        this.setAmountPerMin(60 / this.manufacturingDuration * this.amount)
-        this.setAmountPerMinMulti(60 / this.manufacturingDuration * this.amount * this.parentNode.multiplier)
-        console.log(this.name)
-        console.log(this.amountPerMinMulti)
-        console.log(this.parentNode.multiplier)
+    get amountPerMinX() {
+        return this.amountPerMin * this.parentNode.multiplier
     }
 
     setChildNode(node) {
@@ -79,7 +64,7 @@ export class Ingredient {
         const recipe = this.recipeOptions.find((r) => r.name === name)
         this.setSelectedRecipe(recipe === undefined ? null : recipe)
         if (this.selectedRecipe !== null) {
-            let newNode = new NodeState(this.selectedRecipe,this.name,this,this.amountPerMinMulti)
+            let newNode = new NodeState(this.selectedRecipe, this.part.name, this, this.amountPerMinX)
             this.setChildNode(newNode)
         } else {
             this.setChildNode(null)
@@ -98,7 +83,7 @@ export class Ingredient {
 
 
     loadRecipeOptions() {
-        fetch('/find-recipe-by-product?product=' + this.name)
+        fetch('/find-recipe-by-product?product=' + this.part.name)
             .then((response) => response.json())
             .then((recipeList) => {
                 /** @type {Recipe[]} recipeList*/

@@ -63,10 +63,10 @@ export class TotalState {
     get listTotals() {
         let list = {}
         this.ingredients.forEach((i) => {
-            if (list[i.name] === undefined) {
-                list[i.name] = i.amountPerMin
+            if (list[i.part.name] === undefined) {
+                list[i.part.name] = i.amountPerMinX
             } else {
-                list[i.name] += i.amountPerMin
+                list[i.part.name] += i.amountPerMinX
             }
         })
 
