@@ -18,11 +18,17 @@ export class RecipeState {
         this.recipes = recipes;
     }
 
+    setSelectedRecipe(recipe) {
+        this.selectedRecipe = recipe
+    }
+
 
     constructor() {
         makeObservable(this, {
             recipes: observable,
+            selectedRecipe: observable,
             setRecipes: action,
+            setSelectedRecipe: action,
         })
 
         EventBus.subscribe(partEvents.partChanged, (part) => {
@@ -41,6 +47,7 @@ export class RecipeState {
 
     handleRecipeChanged(e) {
         let recipe = this.recipes.find((r) => r.name === e.target.value)
+        this.setSelectedRecipe(recipe)
         EventBus.publish(events.recipeChanged, recipe ? recipe : null)
     }
 

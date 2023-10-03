@@ -10,6 +10,11 @@ export class Recipe {
     manufactoringDuration = 1
     producedIn = ''
 
+    /**
+     *
+     * @param name
+     * @return {Part|null}
+     */
     findProduct(name) {
         const found = this.products.find((p) => p.name = name)
         if (!found) {

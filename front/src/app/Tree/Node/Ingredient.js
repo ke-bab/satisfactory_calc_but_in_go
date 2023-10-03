@@ -35,6 +35,7 @@ export class Ingredient {
             selectedRecipe: observable,
             childNode: observable,
             amountPerMin: computed,
+            amountPerMinM: computed,
             setRecipeOptions: action,
             setSelectedRecipe: action,
             setChildNode: action,
@@ -53,11 +54,13 @@ export class Ingredient {
             EventBus.publish(events.nodeAdded, node)
         }
     }
+
     setSelectedRecipeByName(name) {
         const recipe = this.recipeOptions.find((r) => r.name === name)
         this.setSelectedRecipe(recipe === undefined ? null : recipe)
         if (this.selectedRecipe !== null) {
-            this.setChildNode(new NodeState(this.selectedRecipe, this.name, this))
+            let newNode = new NodeState(this.selectedRecipe,this.name,this,this.getAmountPerMinM())
+            this.setChildNode(newNode)
         } else {
             this.setChildNode(null)
         }
@@ -73,8 +76,21 @@ export class Ingredient {
         this.recipeOptions = options
     }
 
-    get amountPerMin() {
+    getAmountPerMin() {
         return 60 / this.manufacturingDuration * this.amount
+
+    }
+
+    getAmountPerMinM() {
+        return 60 / this.manufacturingDuration * this.amount * this.parentNode.multiplier
+    }
+
+    get amountPerMin() {
+        return this.getAmountPerMin()
+    }
+
+    get amountPerMinM() {
+        return this.getAmountPerMinM()
     }
 
     loadRecipeOptions() {

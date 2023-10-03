@@ -12,14 +12,9 @@ export const events = {
 function Amount() {
     const [state] = useState(() => new AmountState())
 
-    function handleChange(e) {
-        state.setAmount(e.target.value)
-        // recalculate tree with delay
-    }
-
     return (
         <div id="amount">
-            <input id="amount_input" type="number" min="0" value={state.amount} onChange={handleChange}/>
+            <input id="amount_input" type="number" min="0" value={state.amount} onChange={(e) => state.handleAmountChanged(e)}/>
         </div>
     )
 }

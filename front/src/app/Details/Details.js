@@ -13,12 +13,12 @@ function Details() {
     if (state.node) {
         return (
             <div id="details">
-                <div>output: {state.node.mainProduct.name} - {state.node.getAmountPerMin() + "/m"}</div>
+                <div>output: {state.node.mainProduct.name} - {state.node.amountPerMinM + "/m"}</div>
                 <div>ingredients:</div>
                 {
                     state.node.ingredients.map((ingredient, index) => {
                         return <div key={index}>
-                            <span>{ingredient.name} - {ingredient.amountPerMin + "/m"}</span>
+                            <span>{ingredient.name} - {ingredient.amountPerMinM + "/m"}</span>
                             <span>
                             <select
                                 onChange={(e) => ingredient.setSelectedRecipeByName(e.target.value)}

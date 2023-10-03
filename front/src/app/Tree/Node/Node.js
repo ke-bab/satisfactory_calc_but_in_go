@@ -1,6 +1,14 @@
 import {observer} from "mobx-react-lite";
-import {Ingredient} from "./NodeState";
+import {Ingredient} from "./Ingredient";
+import {NodeState} from "./NodeState";
 
+/**
+ *
+ * @param {NodeState} state
+ * @param index
+ * @return {JSX.Element}
+ * @constructor
+ */
 function Node({state, keyK: index}) {
 
     function getWidthHeight(len) {
@@ -34,7 +42,7 @@ function Node({state, keyK: index}) {
 
         return <div key={index} style={styles} className="ingredient">
             <img className="image" src="/static/images/Assembler.png" alt=""/>
-            <div className="count">{ingredient.amountPerMin  + '/m'}</div>
+            <div className="count">{ingredient.amountPerMinM  + '/m'}</div>
         </div>
     }
 
@@ -47,7 +55,7 @@ function Node({state, keyK: index}) {
         <div className={"cell"} key={index} onClick={(e) => state.handleClick(e)} style={style}>
             <div className="left">
                 <img src="/static/images/Assembler.png" alt=""/>
-                <div>x1</div>
+                <div>x{state.multiplier}</div>
             </div>
             <div className="right">
                 {
