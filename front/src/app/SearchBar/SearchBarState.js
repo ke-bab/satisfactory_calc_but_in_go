@@ -56,6 +56,7 @@ export class SearchBarState {
 
     handleKeyDown(e) {
         if (e.key === 'ArrowDown') {
+            e.preventDefault()
             if (this.highlightedIndex === null) {
                 this.stepTo(0)
             } else {
@@ -63,6 +64,7 @@ export class SearchBarState {
             }
         }
         if (e.key === 'ArrowUp') {
+            e.preventDefault()
             if (this.highlightedIndex === null) {
                 this.stepTo(this.matchedParts.length - 1)
             } else {
