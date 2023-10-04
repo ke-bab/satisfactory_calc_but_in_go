@@ -43,11 +43,15 @@ export class SearchBarState {
 
     handleChange(e) {
         this.setHighlightedIndex(null)
+        if (e.target.value === '') {
+            this.setMatchedParts([])
+            return
+        }
         const found = this.parts.filter((p) => {
             return contains(p.name, e.target.value) || contains(p.displayName, e.target.value)
         })
 
-        this.setMatchedParts(found.slice(0, 11))
+        this.setMatchedParts(found.slice(0, 10))
     }
 
     handleKeyDown(e) {

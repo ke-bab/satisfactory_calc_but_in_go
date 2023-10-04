@@ -11,6 +11,8 @@ function SearchBar() {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
                 state.setShow(false)
+                state.setMatchedParts([])
+                state.setHighlightedIndex(null)
             }
 
             if (document.activeElement.tagName !== 'INPUT') {
