@@ -10,9 +10,13 @@ function SearchBar() {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
-                state.setShow(false)
-                state.setMatchedParts([])
-                state.setHighlightedIndex(null)
+                if (state.isLocked()) {
+                    state.unlock()
+                } else {
+                    state.setShow(false)
+                    state.setMatchedParts([])
+                    state.setHighlightedIndex(null)
+                }
             }
 
             if (document.activeElement.tagName !== 'INPUT') {
@@ -35,14 +39,21 @@ function SearchBar() {
     }, [state.show])
 
     if (state.show) {
+        let classNameContainer = state.isLocked() ? 'moved-up' : 'centered'
+
         return (
-            <div id="search-container" onKeyDown={(e) => state.handleKeyDown(e)}>
+            <div
+                id="search-container"
+                onKeyDown={(e) => state.handleKeyDown(e)}
+                className={classNameContainer}
+            >
                 <div className="label">
                     <span className="fics">FICS</span>
                     <span className="it">IT</span>
                     <span className="quicksearch"> QUICK SEARCH</span>
                 </div>
                 <input
+                    value={state.value}
                     ref={ref} className="search-bar" placeholder="Search"
                     onChange={(e) => state.handleChange(e)}>
                 </input>

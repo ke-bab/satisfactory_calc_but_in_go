@@ -1,9 +1,17 @@
 #search-container {
     position: absolute;
     left: 30%;
-    top: 30%;
     width: 40%;
     z-index: 2;
+    transition: top 0.2s ease-in-out;
+}
+
+.centered {
+    top: 30%;
+}
+
+.moved-up {
+    top: 20%;
 }
 
 #search-container > .label {
@@ -24,7 +32,6 @@
 #search-container > .label > .quicksearch {
     color: #CCCCCC;
 }
-
 
 
 #search-container > .search-bar {
@@ -48,7 +55,7 @@
     outline: none;
 }
 
-
+/*search results*/
 
 .search-result {
     display: flex;

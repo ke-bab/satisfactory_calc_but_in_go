@@ -9,7 +9,11 @@ function HUDControls() {
                 <div></div>
                 <img src="/static/images/search.svg" alt=""/>
             </div>
-
+            <div>
+                <div>Esc</div>
+                <div></div>
+                <img src="/static/images/cross.svg" alt=""/>
+            </div>
         </div>
     )
 }

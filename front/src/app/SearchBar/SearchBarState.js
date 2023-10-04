@@ -1,5 +1,11 @@
 import {action, makeObservable, observable} from "mobx";
 import {Option} from "../GameData/Option";
+import {EventBus} from "../Bus";
+
+export const events = {
+    locked: 'search-bar-locked',
+    unlocked: 'search-bar-unlocked',
+}
 
 export class SearchBarState {
     show = true
@@ -9,6 +15,9 @@ export class SearchBarState {
     matchedParts = []
     /** @type {?number}*/
     highlightedIndex = null
+    /** @type {?Option}*/
+    selectedPart = null
+    value = ''
 
     constructor() {
         makeObservable(this, {
@@ -21,8 +30,15 @@ export class SearchBarState {
             //
             highlightedIndex: observable,
             setHighlightedIndex: action,
+            //
+            value: observable,
+            setValue: action,
         })
         this.loadParts()
+    }
+
+    setValue(v) {
+        this.value = v
     }
 
     setHighlightedIndex(i) {
@@ -42,6 +58,7 @@ export class SearchBarState {
     }
 
     handleChange(e) {
+        this.setValue(e.target.value)
         this.setHighlightedIndex(null)
         if (e.target.value === '') {
             this.setMatchedParts([])
@@ -54,8 +71,12 @@ export class SearchBarState {
         this.setMatchedParts(found.slice(0, 10))
     }
 
+    isLocked() {
+        return this.selectedPart !== null
+    }
+
     handleKeyDown(e) {
-        if (e.key === 'ArrowDown') {
+        if (e.key === 'ArrowDown' && !this.isLocked()) {
             e.preventDefault()
             if (this.highlightedIndex === null) {
                 this.stepTo(0)
@@ -63,13 +84,17 @@ export class SearchBarState {
                 this.stepTo(this.highlightedIndex + 1)
             }
         }
-        if (e.key === 'ArrowUp') {
+        if (e.key === 'ArrowUp' && !this.isLocked()) {
             e.preventDefault()
             if (this.highlightedIndex === null) {
                 this.stepTo(this.matchedParts.length - 1)
             } else {
                 this.stepTo(this.highlightedIndex - 1)
             }
+        }
+        if (e.key === 'Enter' && !this.isLocked())  {
+            this.lock()
+
         }
     }
 
@@ -79,6 +104,22 @@ export class SearchBarState {
         }
     }
 
+    unlock() {
+        this.selectedPart = null
+        this.setValue('')
+        EventBus.publish(events.unlocked)
+    }
+
+    lock() {
+        if (this.highlightedIndex >= this.matchedParts.length || this.highlightedIndex === null) {
+            return
+        }
+        this.selectedPart = this.matchedParts[this.highlightedIndex]
+        this.setValue(this.selectedPart.displayName)
+        this.setMatchedParts([])
+        this.setHighlightedIndex(null)
+        EventBus.publish(events.locked)
+    }
 
     loadParts() {
         fetch("/resource-name-list")
