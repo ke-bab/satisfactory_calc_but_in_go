@@ -22,7 +22,7 @@ function SearchBar() {
         }
         document.addEventListener('keydown', handleKeyDown, true)
         return () => {
-            document.removeEventListener('onkeydown', handleKeyDown,true)
+            document.removeEventListener('onkeydown', handleKeyDown, true)
         }
     }, []);
 
@@ -34,13 +34,32 @@ function SearchBar() {
 
     if (state.show) {
         return (
-            <div id="search-container">
+            <div id="search-container" onKeyDown={(e) => state.handleKeyDown(e)}>
                 <div className="label">
                     <span className="fics">FICS</span>
                     <span className="it">IT</span>
                     <span className="quicksearch"> QUICK SEARCH</span>
                 </div>
-                <input ref={ref} className="search-bar" placeholder="Search"></input>
+                <input
+                    ref={ref} className="search-bar" placeholder="Search"
+                    onChange={(e) => state.handleChange(e)}>
+                </input>
+                <div className="results">
+                    {state.matchedParts.map((o, index) => {
+                        const isHighlighted = index === state.highlightedIndex
+                        let classes = 'search-result'
+                        if (isHighlighted) {
+                            classes += ' highlighted'
+                        }
+
+                        return <div key={o.name} className={classes}>
+                            <img src="/static/images/Assembler.png" alt=""/>
+                            <div>
+                                {o.displayName}
+                            </div>
+                        </div>
+                    })}
+                </div>
             </div>
         )
     } else {

@@ -9,11 +9,7 @@ function HUDControls() {
                 <div></div>
                 <img src="/static/images/search.svg" alt=""/>
             </div>
-            <div>
-                <div>Tab</div>
-                <div></div>
-                <img src="/static/images/search.svg" alt=""/>
-            </div>
+
         </div>
     )
 }

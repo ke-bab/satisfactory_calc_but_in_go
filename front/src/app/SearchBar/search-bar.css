@@ -17,7 +17,7 @@
 
 
 #search-container > .label > .it {
-    color: #E49246;
+    color: #da6e09;
     font-weight: bold;
 }
 
@@ -36,6 +36,11 @@
     height: 100%;
     color: #CCCCCC;
     padding: 0.5em;
+    box-sizing: border-box;
+}
+
+#search-container > .results {
+    max-height: 15em;
 }
 
 #search-container > .search-bar:focus {
@@ -45,3 +50,31 @@
 
 
 
+.search-result {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(9, 9, 9, 0.9);
+    height: 3em;
+    box-sizing: border-box;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+}
+
+.search-result > * {
+    margin: 0.2em;
+}
+
+.search-result > img {
+    width: auto;
+    height: 90%;
+}
+
+.search-result > div:nth-child(2) {
+    color: #CCCCCC;
+    font-size: 1.2em;
+}
+
+.highlighted {
+    background-color: #da6e09;
+}
