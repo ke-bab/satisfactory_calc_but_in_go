@@ -55,7 +55,7 @@ function Node({state, keyK: index}) {
         <div className={"cell"} key={index} onClick={(e) => state.handleClick(e)} style={style}>
             <div className="left">
                 <img src="/static/images/Assembler.png" alt=""/>
-                <div>x{state.multiplier}</div>
+                <div>x{state.multiplier.toFixed(3)}</div>
             </div>
             <div className="right">
                 {

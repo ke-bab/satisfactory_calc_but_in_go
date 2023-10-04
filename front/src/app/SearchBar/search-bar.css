@@ -1,0 +1,47 @@
+#search-container {
+    position: absolute;
+    left: 30%;
+    top: 30%;
+    width: 40%;
+    z-index: 2;
+}
+
+#search-container > .label {
+
+}
+
+#search-container > .label > .fics {
+    color: #CCCCCC;
+    font-weight: bold;
+}
+
+
+#search-container > .label > .it {
+    color: #E49246;
+    font-weight: bold;
+}
+
+#search-container > .label > .quicksearch {
+    color: #CCCCCC;
+}
+
+
+
+#search-container > .search-bar {
+    background: #363636;
+    border: none;
+    outline: none;
+    font-size: 1.5em;
+    width: 100%;
+    height: 100%;
+    color: #CCCCCC;
+    padding: 0.5em;
+}
+
+#search-container > .search-bar:focus {
+    border: none;
+    outline: none;
+}
+
+
+

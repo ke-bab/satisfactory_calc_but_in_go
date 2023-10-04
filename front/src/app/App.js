@@ -5,10 +5,13 @@ import {Datalist} from "./GameData/Datalist";
 import Tree from './Tree/Tree'
 import Details from "./Details/Details";
 import Total from "./Total/Total";
+import SearchBar from "./SearchBar/SearchBar";
+import HUDControls from "./HUD/HUDControls/HUDControls";
 
 export function App() {
     return (
         <>
+            <SearchBar/>
             <div id="left-panel">
                 <div id="output">
                     <Part/>
@@ -20,6 +23,7 @@ export function App() {
             </div>
             <Tree/>
             <Datalist/>
+            <HUDControls/>
         </>
     )
 }
