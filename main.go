@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	recipes, err := rd.ExtractData("recipes.json")
+	recipes, err := rd.ExtractData("./game_data/update7/recipes.json")
 	handleErr(err)
 	webServer(recipes)
 }
