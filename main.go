@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	rd "factory-calc/recipe_data"
+	rd "factory-calc/back/recipe_data"
 	"net/http"
 	"os"
 )

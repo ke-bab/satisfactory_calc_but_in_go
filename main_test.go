@@ -1,7 +1,7 @@
 package main
 
 import (
-	"factory-calc/recipe_data"
+	"factory-calc/back/recipe_data"
 	"testing"
 )
 

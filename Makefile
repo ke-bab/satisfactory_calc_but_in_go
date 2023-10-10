@@ -6,7 +6,5 @@ front-watch:
 	npm run watch
 front-test:
 	npm test
-image-downloader-install:
-	cd ./cmd/image_downloader; go install
-image-downloader-run:
+download-images:
 	cd ./cmd/image_downloader; go run main.go
