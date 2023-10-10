@@ -1,5 +1,7 @@
 package image_download
 
+import "strings"
+
 const (
 	_20px = "20px"
 	_40px = "40px"
@@ -17,7 +19,7 @@ func NewVariant(isThumb bool, thumbVar string) Variant {
 
 func (v *Variant) getSrcLink(imageSrcExample string) string {
 	if v.IsThumb {
-		return convertToThumb(imageSrcExample)
+		return v.convertToThumb(imageSrcExample)
 	} else {
 		return imageSrcExample
 	}
@@ -31,7 +33,12 @@ func getVariants() []Variant {
 	}
 }
 
-func convertToThumb(imgSrc string) string {
-	//"images/thumb/7/7d/Uranium_Waste.png/40px-Uranium_Waste.png"
-	return imgSrc
+func (v *Variant) convertToThumb(imgSrc string) string {
+	converted := imgSrc[7:]
+	lastSlash := strings.LastIndex(imgSrc, "/")
+	fileName := imgSrc[lastSlash+1:]
+	converted = "/images/thumb" + converted
+	converted = converted + "/" + v.ThumbVariant + "-" + fileName
+
+	return converted
 }
