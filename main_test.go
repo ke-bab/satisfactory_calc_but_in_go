@@ -2,7 +2,6 @@ package main
 
 import (
 	"factory-calc/back/recipe_data"
-	"fmt"
 	"math/rand"
 	"testing"
 )
@@ -33,10 +32,8 @@ func TestLongBitwiseHash(t *testing.T) {
 	unique := make([]int, n)
 	for i := 0; i < n; {
 		r := rand.Intn(max)
-		fmt.Printf("gen %d\n", r)
 		if !exists(checkMap, r) {
 			unique[i] = r
-			fmt.Printf("add %d\n", r)
 			addToCheckMap(&checkMap, r)
 			i++
 		}
@@ -70,7 +67,6 @@ func createCheckMap(max int) []int {
 
 func exists(checkMap []int, v int) bool {
 	index := findIndex(v)
-	fmt.Printf("index: %d, value: %d, integer: %d\n", index, v, checkMap[index])
 	bin := 1 << (v % 32)
 	return checkMap[index]&bin > 0
 }
