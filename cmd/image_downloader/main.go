@@ -14,19 +14,22 @@ func main() {
 		log.Fatal(err)
 	}
 	e := game_data.NewExtractor(s)
-	e.ExtractRaw()
-
-	first := e.RawData.NativeClasses[0].Classes[0]
-	if v, ok := first.(classes.ItemDescriptor); ok {
-
-		println("classname: " + v.ClassName)
+	err = e.ExtractRaw()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	return
+	items := e.GetItemDescriptors()
 
-	d := image_download.NewDownloader("../../front/dist/images/items", []string{
-		"Uranium Waste",
-		"Supercomputer",
-	})
+	d := image_download.NewDownloader("../../front/dist/images/items", convertToStringList(items))
 	d.DownloadAll()
+}
+
+func convertToStringList(items []classes.ItemDescriptor) []string {
+	var strings []string
+	for _, item := range items {
+		strings = append(strings, item.MDisplayName)
+	}
+
+	return strings
 }

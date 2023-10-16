@@ -11,11 +11,11 @@ type Downloader struct {
 }
 
 // NewDownloader downloads images for part from https://satisfactory.wiki.gg
-// imageOutputPath - path where images will be created
+// path - path where images will be created
 // itemNames - list of unique names which corresponds to wiki item names (they will be used to locate image url)
-func NewDownloader(imageOutputPath string, itemNames []string) Downloader {
+func NewDownloader(path string, itemNames []string) Downloader {
 	return Downloader{
-		OutputPath: validatePath(imageOutputPath),
+		OutputPath: validatePath(path),
 		ItemNames:  itemNames,
 	}
 }

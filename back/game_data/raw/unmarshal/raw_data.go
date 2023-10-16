@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const NCItemDesc = "Class'/Script/FactoryGame.FGItemDescriptor'"
+
 type RawData struct {
 	Path          string
 	NativeClasses []classes.NativeClass
@@ -40,7 +42,7 @@ func (r *RawData) Extract() error {
 // private
 
 func (r *RawData) extractClass(n *classes.NativeClass) error {
-	if strings.Contains(n.NativeClass, "Class'/Script/FactoryGame.FGItemDescriptor'") {
+	if strings.Contains(n.NativeClass, NCItemDesc) {
 		for _, rawClass := range n.ClassesRaw {
 			var d classes.ItemDescriptor
 			err := json.Unmarshal(rawClass, &d)
