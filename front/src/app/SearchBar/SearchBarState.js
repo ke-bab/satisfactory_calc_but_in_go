@@ -8,7 +8,7 @@ export const events = {
 }
 
 export class SearchBarState {
-    show = true
+    show = false
     /** @type {Option[]}*/
     parts = []
     /** @type {Option[]}*/
@@ -94,7 +94,6 @@ export class SearchBarState {
         }
         if (e.key === 'Enter' && !this.isLocked())  {
             this.lock()
-
         }
     }
 

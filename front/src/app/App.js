@@ -12,20 +12,22 @@ import RecipeSelect from "./RecipeSelect/RecipeSelect";
 export function App() {
     return (
         <>
-            <SearchBar/>
-            <RecipeSelect/>
-            <div id="left-panel">
-                <div id="output">
-                    <Part/>
-                    <Recipe/>
-                    <Amount/>
+            <div id="planner">
+                <SearchBar/>
+                <RecipeSelect/>
+                <div id="left-panel">
+                    <div id="output">
+                        <Part/>
+                        <Recipe/>
+                        <Amount/>
+                    </div>
+                    <Details/>
+                    <Total/>
                 </div>
-                <Details/>
-                <Total/>
+                <Tree/>
+                <Datalist/>
+                <HUDControls/>
             </div>
-            <Tree/>
-            <Datalist/>
-            <HUDControls/>
         </>
     )
 }
