@@ -8,26 +8,10 @@ import Total from "./Total/Total";
 import SearchBar from "./SearchBar/SearchBar";
 import HUDControls from "./HUD/HUDControls/HUDControls";
 import RecipeSelect from "./RecipeSelect/RecipeSelect";
+import Planner from "./Planner/Planner";
 
 export function App() {
     return (
-        <>
-            <div id="planner">
-                <SearchBar/>
-                <RecipeSelect/>
-                <div id="left-panel">
-                    <div id="output">
-                        <Part/>
-                        <Recipe/>
-                        <Amount/>
-                    </div>
-                    <Details/>
-                    <Total/>
-                </div>
-                <Tree/>
-                <Datalist/>
-                <HUDControls/>
-            </div>
-        </>
+        <Planner/>
     )
 }
