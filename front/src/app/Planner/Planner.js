@@ -5,6 +5,7 @@ import {Datalist} from "../GameData/Datalist";
 import HUDControls from "../HUD/HUDControls/HUDControls";
 import SearchBar from "../SearchBar/SearchBar";
 import './planner.css'
+import {Recipe} from "../Output/Recipe/Recipe";
 
 
 function Planner() {
@@ -14,11 +15,12 @@ function Planner() {
         <div id="planner">
 
             <SearchBar/>
+            <Recipe/>
+
             {/*<RecipeSelect/>*/}
             {/*<div id="left-panel">*/}
             {/*    <div id="output">*/}
             {/*        <Part/>*/}
-            {/*        <Recipe/>*/}
             {/*        <Amount/>*/}
             {/*    </div>*/}
             {/*    <Details/>*/}

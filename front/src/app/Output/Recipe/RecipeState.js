@@ -2,6 +2,7 @@ import {action, makeObservable, observable} from "mobx";
 import {EventBus} from "../../Bus";
 import {Recipe} from "../../GameData/Recipe";
 import {events as partEvents} from "../Part/PartState";
+import {events as itemSearchEvents} from "../../SearchBar/SearchBarState";
 
 
 export const events = {
@@ -9,10 +10,15 @@ export const events = {
 }
 
 export class RecipeState {
+    show = false
     /** @type {Recipe[]}*/
     recipes = []
     /** @type {?Recipe}*/
     selectedRecipe = null
+
+    setShow(show) {
+        this.show = show
+    }
 
     setRecipes(recipes) {
         this.recipes = recipes;
@@ -29,19 +35,17 @@ export class RecipeState {
             selectedRecipe: observable,
             setRecipes: action,
             setSelectedRecipe: action,
+            show: observable,
+            setShow: action,
         })
 
-        EventBus.subscribe(partEvents.partChanged, (part) => {
-            this.handlePartChanged(part)
+        EventBus.subscribe(itemSearchEvents.selected, (part) => {
+            this.handleItemSelected(part)
         })
     }
 
-    handlePartChanged(part) {
-        if (part === '') {
-            this.setRecipes([])
-        } else {
-            this.loadRecipes(part)
-        }
+    handleItemSelected(part) {
+        this.loadRecipes(part)
         EventBus.publish(events.recipeChanged, this.selectedRecipe)
     }
 

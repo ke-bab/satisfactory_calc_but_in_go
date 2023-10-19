@@ -39,7 +39,7 @@
 }
 
 #search-container > .results {
-    max-height: 15em;
+    /*max-height: 15em;*/
 }
 
 #search-container > .search-bar:focus {
