@@ -5,11 +5,11 @@ import {Datalist} from "../GameData/Datalist";
 import HUDControls from "../HUD/HUDControls/HUDControls";
 import SearchBar from "../SearchBar/SearchBar";
 import './planner.css'
-import {Recipe} from "../Output/Recipe/Recipe";
+import Recipe from "../Output/Recipe/Recipe";
 
 
 function Planner() {
-    const [state] = useState(new PlannerState())
+    const [state] = useState(() => new PlannerState())
 
     return (
         <div id="planner">

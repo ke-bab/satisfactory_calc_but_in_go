@@ -71,8 +71,9 @@ func (r Recipe) ContainsProduct(str string) bool {
 }
 
 type ResourceDescription struct {
-	Amount int    `json:"amount"`
-	Name   string `json:"name"`
+	Amount      int    `json:"amount"`
+	Name        string `json:"name"`
+	DisplayName string `json:"displayName"`
 }
 
 func parseDescription(str string) ([]ResourceDescription, error) {

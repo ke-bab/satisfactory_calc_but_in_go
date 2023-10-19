@@ -3,6 +3,7 @@ import {EventBus} from "../../Bus";
 import {Recipe} from "../../GameData/Recipe";
 import {events as partEvents} from "../Part/PartState";
 import {events as itemSearchEvents} from "../../SearchBar/SearchBarState";
+import {Part} from "../../GameData/Part";
 
 
 export const events = {
@@ -63,15 +64,24 @@ export class RecipeState {
                 this.setRecipes(recipeList.map(this.makeRecipeFromObject))
             })
             .catch(error => {
+                console.log(error)
                 this.setRecipes([])
             })
     }
 
+    /**
+     * @param {Recipe} recipeObject
+     * @return {Recipe}
+     */
     makeRecipeFromObject(recipeObject) {
         const newRecipe = new Recipe()
         newRecipe.name = recipeObject.name
         newRecipe.displayName = recipeObject.displayName
-        newRecipe.ingredients = recipeObject.ingredients
+        newRecipe.ingredients = recipeObject.ingredients.map((i) => new Part(
+            i.name,
+            i.amount,
+            i.displayName,
+        ))
         newRecipe.products = recipeObject.products
         newRecipe.manufactoringDuration = recipeObject.manufactoringDuration
         newRecipe.producedIn = recipeObject.producedIn

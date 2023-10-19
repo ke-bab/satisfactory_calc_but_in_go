@@ -1,9 +1,5 @@
 #search-container {
-    /*position: absolute;*/
-    /*left: 30%;*/
     width: 100%;
-    /*z-index: 2;*/
-    /*transition: top 0.2s ease-in-out;*/
 }
 
 #search-container > .label {

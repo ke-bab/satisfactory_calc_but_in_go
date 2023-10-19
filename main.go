@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"factory-calc/back/game_data"
+	"factory-calc/back/game_data/processed/classes"
 	rd "factory-calc/back/recipe_data"
 	"net/http"
 	"os"
@@ -10,8 +11,39 @@ import (
 
 func main() {
 	recipes, err := rd.ExtractData("./game_data/update7/recipes.json")
+	ex, err := game_data.NewExtractor("./game_data/update7/Docs.json")
+	if err != nil {
+		handleErr(err)
+	}
+	items := ex.GetItems()
+
+	for i := 0; i < len(recipes); i++ {
+		// set display name for every ingredient and product in recipe
+		for j := 0; j < len(recipes[i].Products); j++ {
+			if item, ok := findItemByClassName(recipes[i].Products[j].Name, items); ok {
+				recipes[i].Products[j].DisplayName = item.DisplayName
+			}
+		}
+		for j := 0; j < len(recipes[i].Ingredients); j++ {
+			if item, ok := findItemByClassName(recipes[i].Ingredients[j].Name, items); ok {
+				recipes[i].Ingredients[j].DisplayName = item.DisplayName
+			}
+		}
+	}
+
 	handleErr(err)
-	webServer(recipes)
+	webServer(recipes, items)
+}
+
+func findItemByClassName(name string, items []classes.ItemDescriptor) (classes.ItemDescriptor, bool) {
+	for _, item := range items {
+
+		if item.ClassName == name {
+			return item, true
+		}
+	}
+
+	return classes.ItemDescriptor{}, false
 }
 
 type SelectNames struct {
@@ -47,14 +79,9 @@ func containsName(str string, list []SelectNames) bool {
 	return false
 }
 
-func webServer(recipes []rd.Recipe) {
+func webServer(recipes []rd.Recipe, items []classes.ItemDescriptor) {
 	var resourceNames []SelectNames
 
-	ex, err := game_data.NewExtractor("./game_data/update7/Docs.json")
-	if err != nil {
-		handleErr(err)
-	}
-	items := ex.GetItems()
 	for _, item := range items {
 		resourceNames = append(resourceNames, SelectNames{
 			Name:        item.ClassName,
