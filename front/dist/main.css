@@ -23,14 +23,6 @@ body {
     justify-content: center;
 }
 
-#planner {
-    width: 60%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
 #left-panel {
     width: 20%;
     height: 80%;

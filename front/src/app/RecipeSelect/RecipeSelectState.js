@@ -1,6 +1,4 @@
 import {action, makeObservable, observable} from "mobx";
-import {EventBus} from "../Bus";
-import {events as searchEvents} from "../SearchBar/SearchBarState";
 
 
 export class RecipeSelectState {
@@ -11,7 +9,6 @@ export class RecipeSelectState {
             show: observable,
             setShow: action,
         })
-        EventBus.subscribe(searchEvents.locked, () => this.handleSearchLocked())
     }
 
     setShow(show) {

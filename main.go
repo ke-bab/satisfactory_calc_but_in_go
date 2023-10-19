@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"factory-calc/back/game_data"
 	rd "factory-calc/back/recipe_data"
 	"net/http"
 	"os"
@@ -47,28 +48,23 @@ func containsName(str string, list []SelectNames) bool {
 }
 
 func webServer(recipes []rd.Recipe) {
-	var namesList []SelectNames
-
 	var resourceNames []SelectNames
 
-	for _, r := range recipes {
-		for _, p := range r.Products {
-			if !containsName(p.Name, resourceNames) {
-				resourceNames = append(resourceNames, SelectNames{
-					Name:        p.Name,
-					DisplayName: p.Name,
-				})
-			}
-		}
-		//if !strings.Contains(r.Name, "Alternate") {
-		namesList = append(namesList, SelectNames{
-			r.Name,
-			r.DisplayName,
-		})
-		//}
+	ex := game_data.NewExtractor("./game_data/update7/Docs.json")
+	err := ex.ExtractRaw()
+	if err != nil {
+		handleErr(err)
 	}
+	items := ex.GetItemDescriptors()
+	for _, item := range items {
+		resourceNames = append(resourceNames, SelectNames{
+			Name:        item.ClassName,
+			DisplayName: item.MDisplayName,
+		})
+
+	}
+
 	resources, err := json.Marshal(resourceNames)
-	//namesJson, err := json.Marshal(namesList)
 	handleErr(err)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

@@ -10,13 +10,7 @@ function SearchBar() {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
-                if (state.isLocked()) {
-                    state.unlock()
-                } else {
-                    state.setShow(false)
-                    state.setMatchedParts([])
-                    state.setHighlightedIndex(null)
-                }
+                // empty input
             }
 
             if (document.activeElement.tagName !== 'INPUT') {
@@ -39,19 +33,17 @@ function SearchBar() {
     }, [state.show])
 
     if (state.show) {
-        let classNameContainer = state.isLocked() ? 'moved-up' : 'centered'
 
         return (
             <div
                 id="search-container"
                 onKeyDown={(e) => state.handleKeyDown(e)}
-                className={classNameContainer}
             >
-                <div className="label">
-                    <span className="fics">FICS</span>
-                    <span className="it">IT</span>
-                    <span className="quicksearch"> QUICK SEARCH</span>
-                </div>
+                {/*<div className="label">*/}
+                {/*    <span className="fics">FICS</span>*/}
+                {/*    <span className="it">IT</span>*/}
+                {/*    <span className="quicksearch"> QUICK SEARCH</span>*/}
+                {/*</div>*/}
                 <input
                     value={state.value}
                     ref={ref} className="search-bar" placeholder="Search"
@@ -64,9 +56,12 @@ function SearchBar() {
                         if (isHighlighted) {
                             classes += ' highlighted'
                         }
+                        let nameUnderscored = o.displayName.repeat(1).replaceAll(" ", "_")
+                        let src = "/static/images/items/" + nameUnderscored + "/" + "40px-" + nameUnderscored + ".png"
 
                         return <div key={o.name} className={classes}>
-                            <img src="/static/images/Assembler.png" alt=""/>
+
+                            <img src={src} alt=""/>
                             <div>
                                 {o.displayName}
                             </div>

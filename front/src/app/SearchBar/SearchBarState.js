@@ -3,12 +3,11 @@ import {Option} from "../GameData/Option";
 import {EventBus} from "../Bus";
 
 export const events = {
-    locked: 'search-bar-locked',
-    unlocked: 'search-bar-unlocked',
+    selected: 'item-selected',
 }
 
 export class SearchBarState {
-    show = false
+    show = true
     /** @type {Option[]}*/
     parts = []
     /** @type {Option[]}*/
@@ -65,7 +64,7 @@ export class SearchBarState {
             return
         }
         const found = this.parts.filter((p) => {
-            return contains(p.name, e.target.value) || contains(p.displayName, e.target.value)
+            return contains(p.displayName, e.target.value)
         })
 
         this.setMatchedParts(found.slice(0, 10))
@@ -76,7 +75,7 @@ export class SearchBarState {
     }
 
     handleKeyDown(e) {
-        if (e.key === 'ArrowDown' && !this.isLocked()) {
+        if (e.key === 'ArrowDown') {
             e.preventDefault()
             if (this.highlightedIndex === null) {
                 this.stepTo(0)
@@ -84,7 +83,7 @@ export class SearchBarState {
                 this.stepTo(this.highlightedIndex + 1)
             }
         }
-        if (e.key === 'ArrowUp' && !this.isLocked()) {
+        if (e.key === 'ArrowUp') {
             e.preventDefault()
             if (this.highlightedIndex === null) {
                 this.stepTo(this.matchedParts.length - 1)
@@ -92,8 +91,8 @@ export class SearchBarState {
                 this.stepTo(this.highlightedIndex - 1)
             }
         }
-        if (e.key === 'Enter' && !this.isLocked())  {
-            this.lock()
+        if (e.key === 'Enter')  {
+            this.select()
         }
     }
 
@@ -103,13 +102,7 @@ export class SearchBarState {
         }
     }
 
-    unlock() {
-        this.selectedPart = null
-        this.setValue('')
-        EventBus.publish(events.unlocked)
-    }
-
-    lock() {
+    select() {
         if (this.highlightedIndex >= this.matchedParts.length || this.highlightedIndex === null) {
             return
         }
@@ -117,7 +110,7 @@ export class SearchBarState {
         this.setValue(this.selectedPart.displayName)
         this.setMatchedParts([])
         this.setHighlightedIndex(null)
-        EventBus.publish(events.locked)
+        EventBus.publish(events.selected, this.selectedPart.name)
     }
 
     loadParts() {
