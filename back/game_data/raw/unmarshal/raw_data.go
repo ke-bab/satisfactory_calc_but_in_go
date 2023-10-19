@@ -2,6 +2,7 @@ package unmarshal
 
 import (
 	"encoding/json"
+	"factory-calc/back/game_data/raw"
 	"factory-calc/back/game_data/raw/classes"
 	"os"
 	"strings"
@@ -11,14 +12,22 @@ const NCItemDesc = "Class'/Script/FactoryGame.FGItemDescriptor'"
 
 type RawData struct {
 	Path          string
-	NativeClasses []classes.NativeClass
+	NativeClasses []raw.NativeClass
 }
 
-func NewRawData(path string) RawData {
-	return RawData{Path: path}
+func NewRawData(path string) (RawData, error) {
+	raw := RawData{Path: path}
+	err := raw.extract()
+	if err != nil {
+		return RawData{}, err
+	}
+
+	return raw, nil
 }
 
-func (r *RawData) Extract() error {
+// private
+
+func (r *RawData) extract() error {
 	file, err := os.ReadFile(r.Path)
 	if err != nil {
 		return err
@@ -39,9 +48,7 @@ func (r *RawData) Extract() error {
 	return nil
 }
 
-// private
-
-func (r *RawData) extractClass(n *classes.NativeClass) error {
+func (r *RawData) extractClass(n *raw.NativeClass) error {
 	if strings.Contains(n.NativeClass, NCItemDesc) {
 		for _, rawClass := range n.ClassesRaw {
 			var d classes.ItemDescriptor

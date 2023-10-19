@@ -2,7 +2,7 @@ package main
 
 import (
 	"factory-calc/back/game_data"
-	"factory-calc/back/game_data/raw/classes"
+	"factory-calc/back/game_data/processed/classes"
 	"factory-calc/back/image_download"
 	"log"
 	"path/filepath"
@@ -13,13 +13,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	e := game_data.NewExtractor(s)
-	err = e.ExtractRaw()
+	e, err := game_data.NewExtractor(s)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	items := e.GetItemDescriptors()
+	items := e.GetItems()
 
 	d := image_download.NewDownloader("../../front/dist/images/items", convertToStringList(items))
 	d.DownloadAll()
@@ -28,7 +27,7 @@ func main() {
 func convertToStringList(items []classes.ItemDescriptor) []string {
 	var strings []string
 	for _, item := range items {
-		strings = append(strings, item.MDisplayName)
+		strings = append(strings, item.DisplayName)
 	}
 
 	return strings

@@ -50,16 +50,15 @@ func containsName(str string, list []SelectNames) bool {
 func webServer(recipes []rd.Recipe) {
 	var resourceNames []SelectNames
 
-	ex := game_data.NewExtractor("./game_data/update7/Docs.json")
-	err := ex.ExtractRaw()
+	ex, err := game_data.NewExtractor("./game_data/update7/Docs.json")
 	if err != nil {
 		handleErr(err)
 	}
-	items := ex.GetItemDescriptors()
+	items := ex.GetItems()
 	for _, item := range items {
 		resourceNames = append(resourceNames, SelectNames{
 			Name:        item.ClassName,
-			DisplayName: item.MDisplayName,
+			DisplayName: item.DisplayName,
 		})
 
 	}
