@@ -47,6 +47,11 @@ export class RecipeState {
 
     handleItemSelected(part) {
         this.loadRecipes(part)
+            .then(() => {
+                if (this.recipes.length > 0) {
+                    this.setSelectedRecipe(this.recipes[0])
+                }
+            })
         EventBus.publish(events.recipeChanged, this.selectedRecipe)
     }
 
@@ -58,15 +63,20 @@ export class RecipeState {
 
 
     loadRecipes(part) {
-        fetch('/find-recipe-by-product?product=' + part)
-            .then((response) => response.json())
-            .then((recipeList) => {
-                this.setRecipes(recipeList.map(this.makeRecipeFromObject))
-            })
-            .catch(error => {
-                console.log(error)
-                this.setRecipes([])
-            })
+        return new Promise((resolve, reject) => {
+            fetch('/find-recipe-by-product?product=' + part)
+                .then((response) => response.json())
+                .then((recipeList) => {
+                    this.setRecipes(recipeList.map(this.makeRecipeFromObject))
+                    resolve()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.setRecipes([])
+                    reject()
+                })
+        })
+
     }
 
     /**

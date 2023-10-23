@@ -10,7 +10,17 @@ function Recipe() {
 
     return (
         <div id="recipe-select-container">
-            <div id="recipe-selected"></div>
+            {state.selectedRecipe !== null
+                ?
+                <div id="recipe-selected">
+                    {state.selectedRecipe.displayName}
+                    {state.selectedRecipe.ingredients.map((i) => {
+                        return <img src={i.imgSrc40px()} alt=""/>
+                    })}
+                </div>
+                : <div id="recipe-selected">recipe not selected</div>
+            }
+
 
             {/*<select onChange={(e) => state.handleRecipeChanged(e)}*/}
             {/*        value={state.selectedRecipe ? state.selectedRecipe.name : ''}>*/}
@@ -22,7 +32,6 @@ function Recipe() {
             <div id="recipe-options">
                 {state.recipes.map((recipe, index) =>
                     <div key={index}>
-
                         {recipe.displayName}
                         {recipe.ingredients.map((i) => {
                             return <img src={i.imgSrc40px()} alt=""/>
