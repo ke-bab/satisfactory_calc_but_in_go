@@ -12,11 +12,12 @@ function Recipe() {
         <div id="recipe-select-container">
             {state.selectedRecipe !== null
                 ?
-                <div id="recipe-selected">
+                <div id="recipe-selected" onClick={(e) => state.handleClick(e)}>
                     {state.selectedRecipe.displayName}
                     {state.selectedRecipe.ingredients.map((i) => {
                         return <img src={i.imgSrc40px()} alt=""/>
                     })}
+                    <img className="arrow-down" src="/static/images/arrow-down.svg" alt=""/>
                 </div>
                 : <div id="recipe-selected">recipe not selected</div>
             }
@@ -29,16 +30,21 @@ function Recipe() {
             {/*        <option key={index} value={recipe.name}>{recipe.displayName}</option>*/}
             {/*    )}*/}
             {/*</select>*/}
-            <div id="recipe-options">
-                {state.recipes.map((recipe, index) =>
-                    <div key={index}>
-                        {recipe.displayName}
-                        {recipe.ingredients.map((i) => {
-                            return <img src={i.imgSrc40px()} alt=""/>
-                        })}
-                    </div>
-                )}
-            </div>
+            {state.droppedDown
+                ?
+                <div id="recipe-options">
+                    {state.recipes.map((recipe, index) =>
+                        <div key={recipe.name} className="recipe-option" onClick={()=> state.handleOptionClick(recipe)}>
+                            {recipe.displayName}
+                            {recipe.ingredients.map((i) => {
+                                return <img src={i.imgSrc40px()} alt=""/>
+                            })}
+                        </div>
+                    )}
+                </div>
+                : null
+            }
+
         </div>
     )
 }

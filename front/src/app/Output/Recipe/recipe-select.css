@@ -6,7 +6,31 @@
     width: 100%;
     height: auto;
     color: #CCCCCC;
-    padding: 0.5em;
+    /*padding: 0.5em;*/
     box-sizing: border-box;
 }
 
+#recipe-selected {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+#recipe-selected:hover {
+    background: #262626;
+    cursor: pointer;
+}
+
+.recipe-option {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+.arrow-down {
+    width: 1em;
+}

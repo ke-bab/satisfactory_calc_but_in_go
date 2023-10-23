@@ -16,6 +16,11 @@ export class RecipeState {
     recipes = []
     /** @type {?Recipe}*/
     selectedRecipe = null
+    droppedDown = false
+
+    setDroppedDown(isDropped) {
+        this.droppedDown = isDropped
+    }
 
     setShow(show) {
         this.show = show
@@ -33,11 +38,16 @@ export class RecipeState {
     constructor() {
         makeObservable(this, {
             recipes: observable,
-            selectedRecipe: observable,
             setRecipes: action,
+            //
+            selectedRecipe: observable,
             setSelectedRecipe: action,
+            //
             show: observable,
             setShow: action,
+            //
+            droppedDown: observable,
+            setDroppedDown: action,
         })
 
         EventBus.subscribe(itemSearchEvents.selected, (part) => {
@@ -61,6 +71,13 @@ export class RecipeState {
         EventBus.publish(events.recipeChanged, recipe ? recipe : null)
     }
 
+    handleClick(e) {
+        this.setDroppedDown(!this.droppedDown)
+    }
+
+    handleOptionClick(recipe) {
+        this.setSelectedRecipe(recipe)
+    }
 
     loadRecipes(part) {
         return new Promise((resolve, reject) => {
@@ -73,6 +90,7 @@ export class RecipeState {
                 .catch(error => {
                     console.log(error)
                     this.setRecipes([])
+                    this.setSelectedRecipe(null)
                     reject()
                 })
         })
