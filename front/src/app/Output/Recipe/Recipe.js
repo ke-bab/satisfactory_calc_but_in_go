@@ -12,32 +12,35 @@ function Recipe() {
         <div id="recipe-select-container">
             {state.selectedRecipe !== null
                 ?
-                <div id="recipe-selected" onClick={(e) => state.handleClick(e)}>
-                    {state.selectedRecipe.displayName}
-                    {state.selectedRecipe.ingredients.map((i) => {
-                        return <img src={i.imgSrc40px()} alt=""/>
-                    })}
+                <div id="recipe-selected-wrapper" onClick={(e) => state.handleClick(e)}>
+                    <div id="recipe-selected">
+                        {state.selectedRecipe.displayName}
+                        {state.selectedRecipe.ingredients.map((i) => {
+                            return <div className="recipe-ingredient">
+                                <img className="recipe-ingredient-image" src={i.imgSrc40px()} alt=""/>
+                                <div className="recipe-ingredient-amount">{i.amountPerMin(state.selectedRecipe)}/min</div>
+                            </div>
+                        })}
+                    </div>
                     <img className="arrow-down" src="/static/images/arrow-down.svg" alt=""/>
                 </div>
-                : <div id="recipe-selected">recipe not selected</div>
+                : <div id="recipe-selected">&lt;recipe not selected&gt;</div>
             }
 
 
-            {/*<select onChange={(e) => state.handleRecipeChanged(e)}*/}
-            {/*        value={state.selectedRecipe ? state.selectedRecipe.name : ''}>*/}
-            {/*    <option value="">not selected</option>*/}
-            {/*    {state.recipes.map((recipe, index) =>*/}
-            {/*        <option key={index} value={recipe.name}>{recipe.displayName}</option>*/}
-            {/*    )}*/}
-            {/*</select>*/}
             {state.droppedDown
                 ?
                 <div id="recipe-options">
                     {state.recipes.map((recipe, index) =>
-                        <div key={recipe.name} className="recipe-option" onClick={()=> state.handleOptionClick(recipe)}>
+                        <div key={recipe.name} className="recipe-option"
+                             onClick={() => state.handleOptionClick(recipe)}>
                             {recipe.displayName}
                             {recipe.ingredients.map((i) => {
-                                return <img src={i.imgSrc40px()} alt=""/>
+                                return <div className="recipe-ingredient">
+                                    <img className="recipe-ingredient-image" src={i.imgSrc40px()} alt=""/>
+                                    <div className="recipe-ingredient-amount">{i.amountPerMin(recipe)}/min</div>
+                                </div>
+
                             })}
                         </div>
                     )}

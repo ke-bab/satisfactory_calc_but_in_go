@@ -77,6 +77,7 @@ export class RecipeState {
 
     handleOptionClick(recipe) {
         this.setSelectedRecipe(recipe)
+        this.setDroppedDown(false)
     }
 
     loadRecipes(part) {

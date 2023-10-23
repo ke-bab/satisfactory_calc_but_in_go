@@ -17,6 +17,19 @@ func main() {
 	}
 	items := ex.GetItems()
 
+	for _, item := range items {
+		println(item.ClassName)
+		//if item.ClassName == "OreCopper" {
+		//	println("found")
+		//
+		//} else {
+		//	println(" not found")
+		//
+		//}
+	}
+
+	return
+
 	for i := 0; i < len(recipes); i++ {
 		// set display name for every ingredient and product in recipe
 		for j := 0; j < len(recipes[i].Products); j++ {

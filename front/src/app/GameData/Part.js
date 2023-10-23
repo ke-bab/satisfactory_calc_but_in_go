@@ -9,6 +9,14 @@ export class Part {
     }
 
     /**
+     *
+     * @param {Recipe} recipe
+     */
+    amountPerMin(recipe) {
+        return 60 / recipe.manufactoringDuration * this.amount
+    }
+
+    /**
      * @return {string}
      */
     imgSrc40px() {
